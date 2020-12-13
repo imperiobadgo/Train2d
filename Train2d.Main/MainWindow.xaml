@@ -1,0 +1,97 @@
+﻿<Window x:Class="Train2d.Main.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
+        xmlns:local="clr-namespace:Train2d.Main" xmlns:controls="clr-namespace:Train2d.Main.Controls" xmlns:viewmodel="clr-namespace:Train2d.Main.ViewModel" xmlns:layout="clr-namespace:Train2d.Main.Controls.Layout"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="800" WindowStartupLocation="CenterScreen">
+  <Window.Resources>
+    <ResourceDictionary Source="/Styles/General.xaml" />
+  </Window.Resources>
+
+  <Window.DataContext>
+    <viewmodel:MainWindowViewModel/>
+  </Window.DataContext>
+
+  <Grid>
+
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition/>
+    </Grid.RowDefinitions>
+
+    <StackPanel Grid.Row="0">
+      <Label Content="{Binding SelectedView.FramesPerSecond}"/>
+    </StackPanel>
+    
+    <controls:LayoutView Grid.Row="1" Settings="{Binding Path=SelectedView.Settings, Mode=OneWay}">
+      <controls:LayoutView.CanvasContent>
+        <Grid Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center">
+          <ItemsControl
+          ItemsSource="{Binding Path=SelectedView.Positions}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <Canvas/>
+
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemContainerStyle>
+              <Style>
+                <Setter
+                  Property="Canvas.Left"
+                  Value="{Binding Path=Pos.X, Mode=OneWay}"/>
+                <Setter
+                  Property="Canvas.Top"
+                  Value="{Binding Path=Pos.Y, Mode=OneWay}"/>
+              </Style>
+            </ItemsControl.ItemContainerStyle>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Rectangle Width="10" Height="10" Fill="Aqua" Stroke="Black"/>
+              </DataTemplate>
+
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+        </Grid>
+      </controls:LayoutView.CanvasContent>
+    </controls:LayoutView>
+
+  </Grid>
+  
+  
+
+</Window>
+
+<!--<Canvas LayoutTransform="{StaticResource ResourceKey=Viewer2DSketchScale}">
+  <Rectangle Width="10" Height="10" Fill="Aqua" Stroke="Black" Canvas.Left="{Binding SelectedView.TestPosition.Pos.X}" Canvas.Top="{Binding SelectedView.TestPosition.Pos.Y}"/>
+  <layout:LayoutCoordinates ScaleFactor="{Binding Path=SelectedView.Settings.ScaleFactor, Mode=OneWay, Converter={StaticResource ResourceKey=ScaleInverseConverter}, ConverterParameter={StaticResource Viewer2DScaleFactor}}" />
+</Canvas>-->
+
+<!--<ItemsControl
+          ItemsSource="{Binding Path=SelectedView.Positions}">
+  <ItemsControl.ItemsPanel>
+    <ItemsPanelTemplate>
+      <Canvas/>
+
+    </ItemsPanelTemplate>
+  </ItemsControl.ItemsPanel>
+  <ItemsControl.ItemContainerStyle>
+    <Style>
+      <Setter
+                Property="Canvas.Left"
+                Value="{Binding Path=Pos.X, Mode=OneWay}"/>
+      <Setter
+                Property="Canvas.Top"
+                Value="{Binding Path=Pos.Y, Mode=OneWay}"/>
+    </Style>
+  </ItemsControl.ItemContainerStyle>
+  <ItemsControl.ItemTemplate>
+    <DataTemplate>
+      <Rectangle Width="10" Height="10" Fill="Aqua" Stroke="Black"/>
+    </DataTemplate>
+
+  </ItemsControl.ItemTemplate>
+</ItemsControl>-->

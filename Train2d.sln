@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30717.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Train2d.Main", "Train2d.Main\Train2d.Main.csproj", "{CFFA84A7-9D65-4748-B49E-69C30905E134}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CFFA84A7-9D65-4748-B49E-69C30905E134}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFFA84A7-9D65-4748-B49E-69C30905E134}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFFA84A7-9D65-4748-B49E-69C30905E134}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFFA84A7-9D65-4748-B49E-69C30905E134}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {03BE3ED4-66E3-4A28-94E5-37149F21C601}
+	EndGlobalSection
+EndGlobal
