@@ -19,3 +19,6 @@ C:\Users\mrapka\source\repos\Train2d\Train2d.Main\obj\Debug\Controls\Layout\Layo
 C:\Users\mrapka\source\repos\Train2d\Train2d.Main\obj\Debug\Controls\Layout\LayoutView.g.cs
 C:\Users\mrapka\source\repos\Train2d\Train2d.Main\obj\Debug\Controls\Layout\LayoutView.baml
 C:\Users\mrapka\source\repos\Train2d\Train2d.Main\obj\Debug\Train2d.Main.csprojAssemblyReference.cache
+C:\Users\mrapka\source\repos\Train2d\Train2d.Main\bin\Debug\Train2d.Model.dll
+C:\Users\mrapka\source\repos\Train2d\Train2d.Main\bin\Debug\Train2d.Model.pdb
+C:\Users\mrapka\source\repos\Train2d\Train2d.Main\obj\Debug\Train2d.Main.csproj.CopyComplete

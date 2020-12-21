@@ -63,6 +63,7 @@
     </Compile>
     <Compile Include="Controls\Layout\LayoutViewSettings.cs" />
     <Compile Include="Converter\ScaleInverseConverter.cs" />
+    <Compile Include="ViewModel\BaseItemViewModel.cs" />
     <Compile Include="ViewModel\LayoutViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
@@ -119,6 +120,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Train2d.Model\Train2d.Model.csproj">
+      <Project>{254a496a-9915-4ce0-a0e9-3fa3336360b0}</Project>
+      <Name>Train2d.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

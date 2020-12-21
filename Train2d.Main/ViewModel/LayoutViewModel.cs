@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Threading;
@@ -7,14 +8,9 @@ using Train2d.Main.Controls;
 
 namespace Train2d.Main.ViewModel
 {
-  class LayoutViewModel : ViewModelBase, INotifyPropertyChanged
+  class LayoutViewModel : ViewModelBase
   {
 
-    public event PropertyChangedEventHandler PropertyChanged;
-    protected void NotifyPropertyChanged(string info)
-    {
-      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
-    }
 
     private DateTime _time1;
     private DateTime _time2;
@@ -24,15 +20,17 @@ namespace Train2d.Main.ViewModel
 
     public LayoutViewModel()
     {
-      int width = 100;
-      int height = 100;
+      Items = new ObservableCollection<BaseItemViewModel>();
       Settings = new LayoutViewSettings { ShowSettings = true, ScaleToPosition = true };
-      rand = new Random();
-      Positions = new List<Position>();
-      for (int i = 0; i < 1000; i++)
-      {
-        Positions.Add(new Position(rand.NextDouble() * width, rand.NextDouble() * height));
-      }
+
+      //rand = new Random();
+      //Positions = new List<Position>();
+      //int width = 100;
+      //int height = 100;
+      //for (int i = 0; i < 1000; i++)
+      //{
+      //  Positions.Add(new Position(rand.NextDouble() * width, rand.NextDouble() * height));
+      //}
       //TestPosition = Positions[0];
 
       _time1 = DateTime.UtcNow;
@@ -47,7 +45,7 @@ namespace Train2d.Main.ViewModel
 
     float elapsedSeconds = 0.0f;
     int numFrames = 0;
-    float msToTrigger = 1000.0f;
+    float secondsToTrigger = 1.0f;
 
     private void GameLoop(object sender, EventArgs e)
     {
@@ -55,18 +53,18 @@ namespace Train2d.Main.ViewModel
       float deltaTime = (_time2.Ticks - _time1.Ticks) / 10000000f;
       //Console.WriteLine(deltaTime);  // *float* output {0,2493331}
       //Console.WriteLine(time2.Ticks - time1.Ticks); // *int* output {2493331}
-      for (int i = 0; i < Positions.Count; i++)
-      {
-        var p = Positions[i];
-        if (rand.Next(20) == 5)
-        {
-          p.Movement = (new Vector((rand.NextDouble() * 2) - 1, (rand.NextDouble() * 2) - 1))*50;
-        }
-        p.Update(deltaTime);
-      }
+      //for (int i = 0; i < Positions.Count; i++)
+      //{
+      //  var p = Positions[i];
+      //  if (rand.Next(20) == 5)
+      //  {
+      //    p.Movement = (new Vector((rand.NextDouble() * 2) - 1, (rand.NextDouble() * 2) - 1))*50;
+      //  }
+      //  p.Update(deltaTime);
+      //}
       numFrames++;
       elapsedSeconds += deltaTime;
-      if (elapsedSeconds > 1.0f)// msToTrigger)
+      if (elapsedSeconds > secondsToTrigger)
       {
         FramesPerSecond = numFrames / elapsedSeconds;
         NotifyPropertyChanged(nameof(FramesPerSecond));
@@ -85,6 +83,8 @@ namespace Train2d.Main.ViewModel
     public List<Position> Positions { get; set; }
 
     public LayoutViewSettings Settings { get; set; }
+
+    public ObservableCollection<BaseItemViewModel> Items { get; private set; }
 
     public float FramesPerSecond { get; private set; }
 
