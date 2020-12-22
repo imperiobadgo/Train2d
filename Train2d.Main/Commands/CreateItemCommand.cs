@@ -1,11 +1,12 @@
 ﻿using Train2d.Main.ViewModel;
+using Train2d.Main.ViewModel.Items;
 
 namespace Train2d.Main.Commands
 {
-  public class CreateItemCommand : CommandItemBase
+  public class CreateItemCommand : CommandItemBase<ItemViewModel>
   {
 
-    public CreateItemCommand(LayoutViewModel viewModel, BaseItemViewModel newItem) : base(viewModel, newItem)
+    public CreateItemCommand(LayoutViewModel viewModel, ItemViewModel newItem) : base(viewModel, newItem)
     { }
 
     protected override bool Execute()

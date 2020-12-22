@@ -8,5 +8,7 @@ namespace Train2d.Model.Items
 {
   public class Track : Item
   {
+
+    public TrackOrientation Orientation { get; set; }
   }
 }

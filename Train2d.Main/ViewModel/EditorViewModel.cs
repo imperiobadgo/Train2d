@@ -1,4 +1,5 @@
 ﻿using Train2d.Main.Commands;
+using Train2d.Main.ViewModel.Items;
 using Train2d.Model.Converter;
 
 namespace Train2d.Main.ViewModel
@@ -7,7 +8,8 @@ namespace Train2d.Main.ViewModel
   {
     #region Attributes
 
-    private readonly LayoutViewModel _parent;    
+    private readonly LayoutViewModel _parent;
+    private bool _placeTracks;
 
     #endregion
 
@@ -27,11 +29,30 @@ namespace Train2d.Main.ViewModel
     {
       if (PlaceTracks)
       {
-        BaseItemViewModel newItem = new BaseItemViewModel();
-        CreateItemCommand createCommand = new CreateItemCommand(_parent, newItem);
+        TrackViewModel newTrack = new TrackViewModel();
+        CreateItemCommand createCommand = new CreateItemCommand(_parent, newTrack);
         _parent.GetCommandController().AddCommandAndExecute(createCommand);
-        PositionItemCommand positionItem = new PositionItemCommand(_parent, newItem, _parent.Settings.MousePosition.ToCoordinate());
+        PositionItemCommand positionItem = new PositionItemCommand(_parent, newTrack, _parent.Settings.MousePosition.ToCoordinate());
         _parent.GetCommandController().AddCommandAndExecute(positionItem);
+        OrientateTrackCommand orientateCommand;
+        if (Vertical)
+        {
+          orientateCommand = new OrientateTrackCommand(_parent, newTrack, Model.TrackOrientation.Vertical);
+        }
+        else if (Diagonal)
+        {
+          orientateCommand = new OrientateTrackCommand(_parent, newTrack, Model.TrackOrientation.Diagonal);
+        }
+        else if (AntiDiagonal)
+        {
+          orientateCommand = new OrientateTrackCommand(_parent, newTrack, Model.TrackOrientation.AntiDiagonal);
+        }
+        else
+        {
+          //Backup case
+          orientateCommand = new OrientateTrackCommand(_parent, newTrack, Model.TrackOrientation.Horizontal);
+        }
+        _parent.GetCommandController().AddCommandAndExecute(orientateCommand);
       }
     }
 
@@ -39,7 +60,22 @@ namespace Train2d.Main.ViewModel
 
     #region Properties
 
-    public bool PlaceTracks { get; set; }
+    public bool PlaceTracks
+    {
+      get => _placeTracks; set
+      {
+        _placeTracks = value;
+        NotifyPropertyChanged(nameof(PlaceTracks));
+      }
+    }
+
+    public bool Horizontal { get; set; }
+
+    public bool Vertical { get; set; }
+
+    public bool Diagonal { get; set; }
+
+    public bool AntiDiagonal { get; set; }
 
     #endregion
 

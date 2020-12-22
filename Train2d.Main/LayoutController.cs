@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Train2d.Main.ViewModel;
+using Train2d.Main.ViewModel.Items;
 using Train2d.Model;
 
 namespace Train2d.Main
@@ -10,7 +10,7 @@ namespace Train2d.Main
   {
     #region Attributes
 
-    private readonly Dictionary<Guid, BaseItemViewModel> _content;
+    private readonly Dictionary<Guid, ItemViewModel> _content;
     private readonly Dictionary<Coordinate, List<Guid>> _layout;
 
     #endregion
@@ -19,9 +19,9 @@ namespace Train2d.Main
 
     public LayoutController()
     {
-      _content = new Dictionary<Guid, BaseItemViewModel>();
+      _content = new Dictionary<Guid, ItemViewModel>();
       _layout = new Dictionary<Coordinate, List<Guid>>();
-      Items = new ObservableCollection<BaseItemViewModel>();
+      Items = new ObservableCollection<ItemViewModel>();
     }
 
     #endregion
@@ -32,7 +32,7 @@ namespace Train2d.Main
     /// Tries to a new item to the layout
     /// </summary>
     /// <returns>True if new Item could be added, False if item already exits</returns>
-    public bool AddItemToLayout(Coordinate position, BaseItemViewModel newItem)
+    public bool AddItemToLayout(Coordinate position, ItemViewModel newItem)
     {
       if (!newItem.Id.HasValue)
       {
@@ -61,7 +61,7 @@ namespace Train2d.Main
     /// </summary>
     /// <param name="itemToRemove"></param>
     /// <returns>True if new Item could be removed, False if item is not at the position</returns>
-    public bool RemoveItemFromLayout(Coordinate position, BaseItemViewModel itemToRemove)
+    public bool RemoveItemFromLayout(Coordinate position, ItemViewModel itemToRemove)
     {
       if (!itemToRemove.Id.HasValue)
       {
@@ -83,14 +83,14 @@ namespace Train2d.Main
     /// Returns all LayoutItems at this Coordinate
     /// </summary>
     /// <returns>if no Items are found, the array contains 0 elements</returns>
-    public BaseItemViewModel[] GetLayoutItems(Coordinate position)
+    public ItemViewModel[] GetLayoutItems(Coordinate position)
     {
-      List<BaseItemViewModel> result = new List<BaseItemViewModel>();
+      List<ItemViewModel> result = new List<ItemViewModel>();
       if (_layout.TryGetValue(position, out List<Guid> itemsAtPosition))
       {
         foreach (var id in itemsAtPosition)
         {
-          BaseItemViewModel item = GetLayoutItemFromId(id);
+          ItemViewModel item = GetLayoutItemFromId(id);
           if (item != null)
           {
             result.Add(item);
@@ -108,7 +108,7 @@ namespace Train2d.Main
     /// Adds a LayoutItem to the guid-dictionary
     /// </summary>
     /// <returns>True when added, False if already exists</returns>
-    public bool AddLayoutItem(BaseItemViewModel newItem)
+    public bool AddLayoutItem(ItemViewModel newItem)
     {
       if (newItem.Id.HasValue)
       {
@@ -125,7 +125,7 @@ namespace Train2d.Main
     /// Tries to remove the LayoutItem from the guid-dictionary
     /// </summary>
     /// <returns>True if iem could be removed, False if item is not in the dictionary</returns>
-    public bool RemoveLayoutItem(BaseItemViewModel itemToRemove)
+    public bool RemoveLayoutItem(ItemViewModel itemToRemove)
     {
       if (!itemToRemove.Id.HasValue)
       {
@@ -143,9 +143,9 @@ namespace Train2d.Main
     /// <summary>
     /// Tries to return the corresponding LayoutItem
     /// </summary>
-    public BaseItemViewModel GetLayoutItemFromId(Guid id)
+    public ItemViewModel GetLayoutItemFromId(Guid id)
     {
-      if (_content.TryGetValue(id, out BaseItemViewModel item))
+      if (_content.TryGetValue(id, out ItemViewModel item))
       {
         return item;
       }
@@ -156,7 +156,7 @@ namespace Train2d.Main
 
     #region View
 
-    public ObservableCollection<BaseItemViewModel> Items { get; private set; }
+    public ObservableCollection<ItemViewModel> Items { get; private set; }
 
     #endregion
 

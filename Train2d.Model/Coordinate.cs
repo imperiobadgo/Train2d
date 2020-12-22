@@ -4,7 +4,7 @@ namespace Train2d.Model
 {
   public struct Coordinate
   {
-    public const int CELLSIZE = 20;
+    public const double CELLSIZE = 20;
 
     public int X;
     public int Y;

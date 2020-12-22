@@ -4,9 +4,9 @@ using Train2d.Model;
 using Train2d.Model.Converter;
 using Train2d.Model.Items;
 
-namespace Train2d.Main.ViewModel
+namespace Train2d.Main.ViewModel.Items
 {
-  public class BaseItemViewModel : ViewModelBase
+  public abstract class ItemViewModel : ViewModelBase
   {
     #region Attributes
 
@@ -16,10 +16,13 @@ namespace Train2d.Main.ViewModel
 
     #region Construct
 
-    public BaseItemViewModel()
-    {
-      _item = new Item();
-    }
+    protected ItemViewModel()
+    { }
+
+    protected void SetItem(Item item) => _item = item;
+
+    public Item BaseItem() => _item;
+
 
     #endregion
 
@@ -34,11 +37,6 @@ namespace Train2d.Main.ViewModel
     {
       _item.Coordinate = _position;
       NotifyPropertyChanged(nameof(Position));
-    }
-
-    public Item Item()
-    {
-      return _item;
     }
 
     #endregion

@@ -60,6 +60,7 @@
     <Compile Include="Commands\CommandItemBase.cs" />
     <Compile Include="Commands\CreateItemCommand.cs" />
     <Compile Include="Commands\DeleteItemCommand.cs" />
+    <Compile Include="Commands\OrientateTrackCommand.cs" />
     <Compile Include="Commands\PositionItemCommand.cs" />
     <Compile Include="Controls\DelegateCommand.cs" />
     <Compile Include="Controls\Layout\LayoutCoordinates.xaml.cs">
@@ -71,11 +72,19 @@
     <Compile Include="Controls\Layout\LayoutViewSettings.cs" />
     <Compile Include="Converter\ScaleInverseConverter.cs" />
     <Compile Include="LayoutController.cs" />
-    <Compile Include="ViewModel\Items\BaseItemViewModel.cs" />
+    <Compile Include="ViewModel\Items\ItemViewModel.cs" />
     <Compile Include="ViewModel\EditorViewModel.cs" />
+    <Compile Include="ViewModel\Items\ItemGenericViewModel.cs" />
+    <Compile Include="ViewModel\Items\TrackViewModel.cs" />
     <Compile Include="ViewModel\LayoutViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="Views\EditorView.xaml.cs">
+      <DependentUpon>EditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TrackView.xaml.cs">
+      <DependentUpon>TrackView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Controls\Layout\LayoutCoordinates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -97,6 +106,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Styles\General.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TrackView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -127,9 +144,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Train2d.Model\Train2d.Model.csproj">
       <Project>{254a496a-9915-4ce0-a0e9-3fa3336360b0}</Project>
