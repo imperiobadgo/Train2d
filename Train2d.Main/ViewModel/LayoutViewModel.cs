@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Threading;
@@ -8,20 +7,32 @@ using Train2d.Main.Controls;
 
 namespace Train2d.Main.ViewModel
 {
-  class LayoutViewModel : ViewModelBase
+  public class LayoutViewModel : ViewModelBase
   {
 
+    #region Attributes
 
     private DateTime _time1;
     private DateTime _time2;
     private DispatcherTimer _timer;
 
     private Random rand;
+    private MainWindowViewModel _parent;
 
-    public LayoutViewModel()
+    #endregion
+
+
+    #region Construct
+
+    public LayoutViewModel(MainWindowViewModel parent)
     {
-      Items = new ObservableCollection<BaseItemViewModel>();
+      _parent = parent;
+      LayoutController = new LayoutController();
       Settings = new LayoutViewSettings { ShowSettings = true, ScaleToPosition = true };
+      EditorController = new EditorViewModel(this);
+      
+
+      InitializeCommands();
 
       //rand = new Random();
       //Positions = new List<Position>();
@@ -42,6 +53,15 @@ namespace Train2d.Main.ViewModel
       _timer.Start(); // start the timer 
 
     }
+
+    private void InitializeCommands()
+    {
+      AddTrackCommand = new DelegateCommand(AddTrackCommandExecute);
+    }
+
+    #endregion
+
+    #region Gameloop
 
     float elapsedSeconds = 0.0f;
     int numFrames = 0;
@@ -78,19 +98,50 @@ namespace Train2d.Main.ViewModel
       _time1 = _time2;
     }
 
+    #endregion
+
+    #region Methods
+
+    public CommandController GetCommandController()
+    {
+      return _parent.CommandController;
+    }
+
+    #endregion
+
+    #region Commands
+
+    public DelegateCommand AddTrackCommand { get; private set; }
+
+    private void AddTrackCommandExecute(object o)
+    {
+
+    }
+
+    #endregion
+
+
+    #region Properties
+
     public Position TestPosition { get; set; }
 
     public List<Position> Positions { get; set; }
 
     public LayoutViewSettings Settings { get; set; }
 
-    public ObservableCollection<BaseItemViewModel> Items { get; private set; }
+    public EditorViewModel EditorController { get; private set; }
+
+    public LayoutController LayoutController { get; private set; }
+
+    
 
     public float FramesPerSecond { get; private set; }
 
+    #endregion
+
   }
 
-  class Position : INotifyPropertyChanged
+  public class Position : INotifyPropertyChanged
   {
 
     public event PropertyChangedEventHandler PropertyChanged;

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Train2d.Model.Commands;
+using Train2d.Main.Commands;
 
-namespace Train2d.Model
+namespace Train2d.Main
 {
   public class CommandController
   {

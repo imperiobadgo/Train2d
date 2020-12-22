@@ -1,4 +1,4 @@
-﻿namespace Train2d.Model.Commands
+﻿namespace Train2d.Main.Commands
 {
   public abstract class CommandBase
   {

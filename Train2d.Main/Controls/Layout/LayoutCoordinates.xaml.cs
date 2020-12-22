@@ -1,8 +1,4 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
+﻿using System.Windows;
 
 
 namespace Train2d.Main.Controls.Layout
@@ -17,7 +13,7 @@ namespace Train2d.Main.Controls.Layout
       InitializeComponent();
     }
 
-    #region "ScaleFactor Property"
+    #region ScaleFactor Property
 
     public double ScaleFactor
     {

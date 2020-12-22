@@ -55,6 +55,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CommandController.cs" />
+    <Compile Include="Commands\CommandBase.cs" />
+    <Compile Include="Commands\CommandItemBase.cs" />
+    <Compile Include="Commands\CreateItemCommand.cs" />
+    <Compile Include="Commands\DeleteItemCommand.cs" />
+    <Compile Include="Commands\PositionItemCommand.cs" />
+    <Compile Include="Controls\DelegateCommand.cs" />
     <Compile Include="Controls\Layout\LayoutCoordinates.xaml.cs">
       <DependentUpon>LayoutCoordinates.xaml</DependentUpon>
     </Compile>
@@ -63,7 +70,9 @@
     </Compile>
     <Compile Include="Controls\Layout\LayoutViewSettings.cs" />
     <Compile Include="Converter\ScaleInverseConverter.cs" />
-    <Compile Include="ViewModel\BaseItemViewModel.cs" />
+    <Compile Include="LayoutController.cs" />
+    <Compile Include="ViewModel\Items\BaseItemViewModel.cs" />
+    <Compile Include="ViewModel\EditorViewModel.cs" />
     <Compile Include="ViewModel\LayoutViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />

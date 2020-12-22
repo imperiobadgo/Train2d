@@ -8,7 +8,15 @@ namespace Train2d.Main.Controls
 {
   public class LayoutViewSettings : INotifyPropertyChanged
   {
+    #region Attributes
+
     private double _scaleFactor = 1.0;
+    private Action _onMouseLeftButtonDownAction;
+    private Action _onMouseLeftButtonUpAction;
+
+    #endregion
+
+    #region Construct
 
     public LayoutViewSettings()
     {
@@ -20,6 +28,24 @@ namespace Train2d.Main.Controls
       Group.Children.Add(Translate);
     }
 
+    public LayoutViewSettings(Action onMouseLeftButtonDownAction) : this()
+    {
+      _onMouseLeftButtonDownAction = onMouseLeftButtonDownAction;
+    }
+
+    public void SetOnMouseLeftButtonDownAction(Action onMouseLeftButtonDownAction)
+    {
+      _onMouseLeftButtonDownAction = onMouseLeftButtonDownAction;
+    }
+
+    public void SetOnMouseLeftButtonUpAction(Action onMouseLeftButtonUpAction)
+    {
+      _onMouseLeftButtonUpAction = onMouseLeftButtonUpAction;
+    }
+
+    #endregion
+
+    #region Methods
     internal void ResetZoomAndScroll()
     {
       Translate.X = 0;
@@ -52,7 +78,19 @@ namespace Train2d.Main.Controls
       Translate.Y = offset.Y;
     }
 
+    public void ExecuteMouseLeftButtonDown()
+    {
+      _onMouseLeftButtonDownAction?.Invoke();
+    }
 
+    public void ExecuteMouseLeftButtonUp()
+    {
+      _onMouseLeftButtonUpAction?.Invoke();
+    }
+
+    #endregion
+
+    #region Properties
 
     public ScaleTransform Scale { get; set; }
     public TranslateTransform Translate { get; set; }
@@ -83,6 +121,9 @@ namespace Train2d.Main.Controls
 
     public bool ScaleToPosition { get; set; } = false;
 
+    public Point MousePosition { get; set; }
+
+    #endregion
 
     public event PropertyChangedEventHandler PropertyChanged;
 

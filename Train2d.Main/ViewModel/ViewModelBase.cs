@@ -2,7 +2,7 @@
 
 namespace Train2d.Main.ViewModel
 {
-  class ViewModelBase : INotifyPropertyChanged
+  public class ViewModelBase : INotifyPropertyChanged
   {
     public event PropertyChangedEventHandler PropertyChanged;
 

@@ -22,15 +22,21 @@
       <RowDefinition/>
     </Grid.RowDefinitions>
 
-    <StackPanel Grid.Row="0">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="Auto"/>
+    </Grid.ColumnDefinitions>
+    
+    <StackPanel Grid.Row="0" Grid.Column="0">
       <Label Content="{Binding SelectedView.FramesPerSecond}"/>
     </StackPanel>
     
-    <controls:LayoutView Grid.Row="1" Settings="{Binding Path=SelectedView.Settings, Mode=OneWay}">
+    <controls:LayoutView Grid.Row="1" Grid.Column="0" Settings="{Binding Path=SelectedView.Settings, Mode=OneWay}" ShowControls="True">
       <controls:LayoutView.CanvasContent>
-        <Grid Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <Grid Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center" LayoutTransform="{StaticResource ResourceKey=Viewer2DSketchScale}">
+          <layout:LayoutCoordinates ScaleFactor="{Binding Path=SelectedView.Settings.ScaleFactor, Mode=OneWay, Converter={StaticResource ResourceKey=ScaleInverseConverter}, ConverterParameter={StaticResource Viewer2DScaleFactor}}" />
           <ItemsControl
-          ItemsSource="{Binding Path=SelectedView.Items}">
+          ItemsSource="{Binding Path=SelectedView.LayoutController.Items}">
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>
                 <Canvas/>
@@ -59,6 +65,10 @@
       </controls:LayoutView.CanvasContent>
     </controls:LayoutView>
 
+    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
+      <CheckBox Content="Place mode" IsChecked="{Binding SelectedView.EditorController.PlaceTracks}"/>
+    </StackPanel>
+    
   </Grid>
   
   

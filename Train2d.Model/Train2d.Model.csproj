@@ -42,19 +42,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandController.cs" />
-    <Compile Include="Commands\CommandItemBase.cs" />
-    <Compile Include="Commands\CreateItemCommand.cs" />
-    <Compile Include="Commands\DeleteItemCommand.cs" />
-    <Compile Include="Commands\PositionItemCommand.cs" />
-    <Compile Include="Converter\CoordinateVectorConverter.cs" />
+    <Compile Include="Converter\CoordinateExtension.cs" />
     <Compile Include="Coordinate.cs" />
     <Compile Include="Items\Item.cs" />
-    <Compile Include="Commands\CommandBase.cs" />
     <Compile Include="Items\Signal.cs" />
     <Compile Include="Items\Track.cs" />
     <Compile Include="Items\Train.cs" />
-    <Compile Include="MainLayoutController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

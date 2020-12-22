@@ -11,7 +11,7 @@ namespace Train2d.Main.Controls
   /// </summary>
   public partial class LayoutView : UserControl
   {
-    #region "Attributes"
+    #region Attributes
 
     private Point _start;
     private Vector _newPosition;
@@ -19,7 +19,7 @@ namespace Train2d.Main.Controls
 
     #endregion
 
-    #region "Construct"
+    #region Construct
 
     public LayoutView()
     {
@@ -32,16 +32,26 @@ namespace Train2d.Main.Controls
     {
       UserControl.MouseWheel += OnContentMouseWheel;
       ZoomContent.MouseLeftButtonDown += OnContentMouseLeftButtonDown;
+      ZoomContent.MouseRightButtonDown += OnContentMouseRightButtonDown;
       ZoomContent.MouseLeftButtonUp += OnContentMouseLeftButtonUp;
+      ZoomContent.MouseRightButtonUp += OnContentMouseRightButtonUp;
       UserControl.MouseMove += OnContentMouseMove;
       UserControl.MouseLeftButtonDown += OnContentMouseLeftButtonDown;
+      UserControl.MouseRightButtonDown += OnContentMouseRightButtonDown;
     }
 
     #endregion
 
-    #region "Methods"
+    #region Methods
 
     private void OnContentMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+      Settings.ExecuteMouseLeftButtonUp();
+      //ZoomContent.ReleaseMouseCapture();
+      //_allowTranslate = false;
+    }
+
+    private void OnContentMouseRightButtonUp(object sender, MouseButtonEventArgs e)
     {
       ZoomContent.ReleaseMouseCapture();
       _allowTranslate = false;
@@ -57,7 +67,7 @@ namespace Train2d.Main.Controls
     {
 
       // Capture mouse here to allow clicking child elements
-      if (_allowTranslate && e.LeftButton == MouseButtonState.Pressed && !ZoomContent.IsMouseCaptured)
+      if (_allowTranslate && e.RightButton == MouseButtonState.Pressed && !ZoomContent.IsMouseCaptured)
         ZoomContent.CaptureMouse();
 
       if (!ZoomContent.IsMouseCaptured)
@@ -81,10 +91,12 @@ namespace Train2d.Main.Controls
       var zoomBoxOrigin = Settings.Translate.Transform(zoomBoxCenter);
 
       var posRelativeToCenter = absoluteMousePositionOnZoomBox - zoomBoxOrigin;
+      
       posRelativeToCenter.Y = -posRelativeToCenter.Y;
       posRelativeToCenter /= (double)Settings.ScaleFactor;
 
       MousePoint = new Point(posRelativeToCenter.X, posRelativeToCenter.Y);
+      Settings.MousePosition = MousePoint;
     }
 
     private static Point GetPosition(Point zoomBoxCenter, LayoutViewSettings settings, Point mousePos)
@@ -101,6 +113,25 @@ namespace Train2d.Main.Controls
 
     private void OnContentMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
+      Settings.ExecuteMouseLeftButtonDown();
+      //if (e.ClickCount == 2)
+      //{
+      //  ResetZoomAndScroll();
+      //  return;
+      //}
+
+      //_start = e.GetPosition(LayoutGrid);
+
+      //_newPosition.X = Settings.Translate.X;
+      //_newPosition.Y = Settings.Translate.Y;
+
+      //// The previous mouse capture was done here, but this stopped inner MouseLeftButtonUp from working
+      //// ZoomContent.CaptureMouse()
+      //_allowTranslate = true;
+    }
+
+    private void OnContentMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+    {
       if (e.ClickCount == 2)
       {
         ResetZoomAndScroll();
@@ -112,7 +143,7 @@ namespace Train2d.Main.Controls
       _newPosition.X = Settings.Translate.X;
       _newPosition.Y = Settings.Translate.Y;
 
-      // The previous mouse capture was done here, but this stopped inner MouseLeftButtonUp from working
+      // The previous mouse capture was done here, but this stopped inner MouseRightButtonUp from working
       // ZoomContent.CaptureMouse()
       _allowTranslate = true;
     }
@@ -148,7 +179,7 @@ namespace Train2d.Main.Controls
 
     #endregion
 
-    #region "Properties"
+    #region Properties
 
     public UIElement CanvasContent
     {
