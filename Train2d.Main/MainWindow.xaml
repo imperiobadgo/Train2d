@@ -15,6 +15,11 @@
     <viewmodel:MainWindowViewModel/>
   </Window.DataContext>
 
+  <Window.InputBindings>
+    <KeyBinding Command="{Binding CommandController.UndoCommand}" Key="Z" Modifiers="Ctrl"/>
+    <KeyBinding Command="{Binding CommandController.RedoCommand}" Key="Y" Modifiers="Ctrl"/>
+  </Window.InputBindings>
+
   <Grid>
 
     <Grid.RowDefinitions>

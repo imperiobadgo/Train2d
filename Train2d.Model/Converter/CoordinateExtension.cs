@@ -6,7 +6,7 @@ namespace Train2d.Model.Converter
   {
     public static Vector ToVector(this Coordinate coordinate)
     {
-      return new Vector(coordinate.X, coordinate.Y);
+      return new Vector(coordinate.X * Coordinate.CELLSIZE, coordinate.Y * Coordinate.CELLSIZE);
     }
 
     public static Coordinate ToCoordinate(this Vector vector)
@@ -16,7 +16,7 @@ namespace Train2d.Model.Converter
 
     public static Point ToPoint(this Coordinate coordinate)
     {
-      return new Point(coordinate.X, coordinate.Y);
+      return new Point(coordinate.X * Coordinate.CELLSIZE, coordinate.Y * Coordinate.CELLSIZE);
     }
 
     public static Coordinate ToCoordinate(this Point point)
