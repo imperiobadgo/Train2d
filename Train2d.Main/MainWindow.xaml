@@ -46,6 +46,8 @@
       <controls:LayoutView.CanvasContent>
         <Grid Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center" LayoutTransform="{StaticResource ResourceKey=Viewer2DSketchScale}">
           <layout:LayoutCoordinates ScaleFactor="{Binding Path=SelectedView.Settings.ScaleFactor, Mode=OneWay, Converter={StaticResource ResourceKey=ScaleInverseConverter}, ConverterParameter={StaticResource Viewer2DScaleFactor}}" />
+          <!--<layout:PositionIndicator ScaleFactor="{Binding Path=SelectedView.Settings.ScaleFactor, Mode=OneWay, Converter={StaticResource ResourceKey=ScaleInverseConverter}, ConverterParameter={StaticResource Viewer2DScaleFactor}}" 
+                                    Position="{Binding Path=SelectedView.Settings.MouseCoordinatePosition}"/>-->
           <ItemsControl
           ItemsSource="{Binding Path=SelectedView.LayoutController.Items}">
             <ItemsControl.ItemsPanel>
@@ -68,7 +70,11 @@
               <DataTemplate DataType="{x:Type items:TrackViewModel}">
                 <Rectangle Width="{x:Static model:Coordinate.CELLSIZE}" Height="4" Fill="Aqua" Stroke="Black">
                   <Rectangle.RenderTransform>
-                    <RotateTransform Angle="{Binding Angle}"/>
+                    <TransformGroup>
+                      <TranslateTransform X="-10" Y="-2"/>
+                      <RotateTransform Angle="{Binding Angle}"/>
+                      <TranslateTransform X="10" Y="0"/>
+                    </TransformGroup>
                   </Rectangle.RenderTransform>
                 </Rectangle>
               </DataTemplate>

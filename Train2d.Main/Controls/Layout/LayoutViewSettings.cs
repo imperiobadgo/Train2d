@@ -3,6 +3,8 @@ using System.Runtime.CompilerServices;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
+using Train2d.Model;
+using Train2d.Model.Converter;
 
 namespace Train2d.Main.Controls
 {
@@ -13,6 +15,9 @@ namespace Train2d.Main.Controls
     private double _scaleFactor = 1.0;
     private Action _onMouseLeftButtonDownAction;
     private Action _onMouseLeftButtonUpAction;
+    private Action _onMouseMoveAction;
+    private Action _onMouseCoordinateChangedAction;
+    private Coordinate _mouseCoordinate;
 
     #endregion
 
@@ -41,6 +46,16 @@ namespace Train2d.Main.Controls
     public void SetOnMouseLeftButtonUpAction(Action onMouseLeftButtonUpAction)
     {
       _onMouseLeftButtonUpAction = onMouseLeftButtonUpAction;
+    }
+
+    public void SetOnMouseMoveAction(Action onMouseMoveAction)
+    {
+      _onMouseMoveAction = onMouseMoveAction;
+    }
+
+    public void SetOnMouseCoordinateChangedAction(Action onMouseCoordinateChangedAction)
+    {
+      _onMouseCoordinateChangedAction = onMouseCoordinateChangedAction;
     }
 
     #endregion
@@ -88,6 +103,16 @@ namespace Train2d.Main.Controls
       _onMouseLeftButtonUpAction?.Invoke();
     }
 
+    public void ExecuteMouseMove()
+    {
+      _onMouseMoveAction?.Invoke();
+    }
+
+    public void ExecuteMouseCoordinateChanged()
+    {
+      _onMouseCoordinateChangedAction?.Invoke();
+    }
+
     #endregion
 
     #region Properties
@@ -123,13 +148,29 @@ namespace Train2d.Main.Controls
 
     public Point MousePosition { get; set; }
 
+    public Vector MouseCoordinatePosition { get => MouseCoordinate.ToVector(); set { } }
+
+    public Coordinate MouseCoordinate
+    {
+      get => _mouseCoordinate; 
+      set
+      {
+        _mouseCoordinate = value;
+        NotifyPropertyChanged(nameof(MouseCoordinatePosition));
+      }
+    }
     #endregion
 
     public event PropertyChangedEventHandler PropertyChanged;
 
     protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
     {
-      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+      NotifyPropertyChanged(propertyName);
+    }
+
+    protected void NotifyPropertyChanged(string info)
+    {
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
     }
   }
 }

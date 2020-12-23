@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Train2d.Model;
+using Train2d.Model.Converter;
 
 namespace Train2d.Main.Controls
 {
@@ -16,6 +18,7 @@ namespace Train2d.Main.Controls
     private Point _start;
     private Vector _newPosition;
     private bool _allowTranslate;
+    private Coordinate _mouseCoordinate;
 
     #endregion
 
@@ -61,6 +64,16 @@ namespace Train2d.Main.Controls
     {
       OnContentMouseMoveTranslate(e);
       OnContentMouseMovePosition(); // sender, e)
+      Settings.ExecuteMouseMove();
+
+      Coordinate newMouseCoordinate = MousePoint.ToCoordinate();
+      if (Equals(newMouseCoordinate, _mouseCoordinate))
+      {
+        return;
+      }
+      _mouseCoordinate = newMouseCoordinate;
+      Settings.MouseCoordinate = _mouseCoordinate;
+      Settings.ExecuteMouseCoordinateChanged();
     }
 
     private void OnContentMouseMoveTranslate(MouseEventArgs e)
@@ -97,6 +110,7 @@ namespace Train2d.Main.Controls
 
       MousePoint = new Point(posRelativeToCenter.X, posRelativeToCenter.Y);
       Settings.MousePosition = MousePoint;
+      
     }
 
     private static Point GetPosition(Point zoomBoxCenter, LayoutViewSettings settings, Point mousePos)
