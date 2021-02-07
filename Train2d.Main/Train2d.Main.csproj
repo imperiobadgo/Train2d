@@ -92,6 +92,7 @@
     </ApplicationDefinition>
     <Compile Include="CommandController.cs" />
     <Compile Include="Commands\CommandBase.cs" />
+    <Compile Include="Commands\CommandChain.cs" />
     <Compile Include="Commands\CommandItemBase.cs" />
     <Compile Include="Commands\CreateItemCommand.cs" />
     <Compile Include="Commands\DeleteItemCommand.cs" />
@@ -105,6 +106,9 @@
       <DependentUpon>LayoutView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Layout\LayoutViewSettings.cs" />
+    <Compile Include="Controls\Layout\PositionIndicator.xaml.cs">
+      <DependentUpon>PositionIndicator.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converter\ScaleInverseConverter.cs" />
     <Compile Include="LayoutController.cs" />
     <Compile Include="Serialization\SerializerContainer.cs" />
@@ -127,6 +131,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Layout\LayoutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Layout\PositionIndicator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
