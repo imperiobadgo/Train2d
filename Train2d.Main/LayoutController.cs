@@ -29,7 +29,7 @@ namespace Train2d.Main
     #region Methods - Layout
 
     /// <summary>
-    /// Tries to a new item to the layout
+    /// Tries to add new item to the layout
     /// </summary>
     /// <returns>True if new Item could be added, False if item already exits</returns>
     public bool AddItemToLayout(Coordinate position, ItemViewModel newItem)
