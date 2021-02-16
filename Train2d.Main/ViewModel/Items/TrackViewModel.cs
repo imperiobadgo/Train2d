@@ -57,6 +57,27 @@ namespace Train2d.Main.ViewModel.Items
       private set { }
     }
 
+    public double XScale
+    {
+      get
+      {
+        switch (Orientation)
+        {
+          case TrackOrientation.Horizontal:
+            return 1;
+          case TrackOrientation.Vertical:
+            return 1;
+          case TrackOrientation.Diagonal:
+            return 1.414;
+          case TrackOrientation.AntiDiagonal:
+            return 1.414;
+          default:
+            return 1;
+        }
+      }
+      private set { }
+    }
+
     #endregion
   }
 }

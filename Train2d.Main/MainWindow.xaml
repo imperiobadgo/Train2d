@@ -46,8 +46,8 @@
       <controls:LayoutView.CanvasContent>
         <Grid Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center" LayoutTransform="{StaticResource ResourceKey=Viewer2DSketchScale}">
           <layout:LayoutCoordinates ScaleFactor="{Binding Path=SelectedView.Settings.ScaleFactor, Mode=OneWay, Converter={StaticResource ResourceKey=ScaleInverseConverter}, ConverterParameter={StaticResource Viewer2DScaleFactor}}" />
-          <!--<layout:PositionIndicator ScaleFactor="{Binding Path=SelectedView.Settings.ScaleFactor, Mode=OneWay, Converter={StaticResource ResourceKey=ScaleInverseConverter}, ConverterParameter={StaticResource Viewer2DScaleFactor}}" 
-                                    Position="{Binding Path=SelectedView.Settings.MouseCoordinatePosition}"/>-->
+          <layout:PositionIndicator ScaleFactor="{Binding Path=SelectedView.Settings.ScaleFactor, Mode=OneWay, Converter={StaticResource ResourceKey=ScaleInverseConverter}, ConverterParameter={StaticResource Viewer2DScaleFactor}}" 
+                                    Position="{Binding Path=SelectedView.Settings.MouseCoordinatePosition, Mode=OneWay}"/>
           <ItemsControl
           ItemsSource="{Binding Path=SelectedView.LayoutController.Items}">
             <ItemsControl.ItemsPanel>
@@ -71,9 +71,10 @@
                 <Rectangle Width="{x:Static model:Coordinate.CELLSIZE}" Height="4" Fill="Aqua" Stroke="Black">
                   <Rectangle.RenderTransform>
                     <TransformGroup>
-                      <TranslateTransform X="-10" Y="-2"/>
+                      <ScaleTransform ScaleX="{Binding XScale}"/>
+                      <TranslateTransform X="0" Y="-2"/>
                       <RotateTransform Angle="{Binding Angle}"/>
-                      <TranslateTransform X="10" Y="0"/>
+                      <TranslateTransform X="{x:Static model:Coordinate.HALFCELLSIZE}" Y="{x:Static model:Coordinate.HALFCELLSIZE}"/>
                     </TransformGroup>
                   </Rectangle.RenderTransform>
                 </Rectangle>

@@ -5,6 +5,7 @@ namespace Train2d.Model
   public struct Coordinate
   {
     public const double CELLSIZE = 20;
+    public const double HALFCELLSIZE = CELLSIZE / 2;
 
     public int X;
     public int Y;
@@ -17,8 +18,8 @@ namespace Train2d.Model
 
     public Coordinate(double x, double y)
     {
-      X = (int)Math.Round(x / CELLSIZE);
-      Y = (int)Math.Round(y / CELLSIZE);
+      X = (int)Math.Floor(x / CELLSIZE);
+      Y = (int)Math.Floor(y / CELLSIZE);
     }
 
     public override bool Equals(object obj)

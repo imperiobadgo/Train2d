@@ -23,7 +23,6 @@ namespace Train2d.Main.ViewModel.Items
 
     public Item BaseItem() => _item;
 
-
     #endregion
 
     #region Methods
@@ -60,7 +59,6 @@ namespace Train2d.Main.ViewModel.Items
     }
 
     #endregion
-
 
   }
 }

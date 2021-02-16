@@ -19,9 +19,9 @@ namespace Train2d.Model.Converter
       return new Point(coordinate.X * Coordinate.CELLSIZE, coordinate.Y * Coordinate.CELLSIZE);
     }
 
-    public static Coordinate ToCoordinate(this Point point)
+    public static Coordinate ToCoordinate(this Point point, double xOffset = 0, double yOffset = 0, double factor = 1)
     {
-      return new Coordinate(point.X, point.Y);
+      return new Coordinate((point.X + xOffset) * factor, (point.Y + yOffset) * factor);
     }
 
   }

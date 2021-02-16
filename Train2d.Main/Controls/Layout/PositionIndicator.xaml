@@ -5,9 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Train2d.Main.Controls.Layout"
              xmlns:model="clr-namespace:Train2d.Model;assembly=Train2d.Model"
+             x:Name="UserControl"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-  <Canvas.RenderTransform>
+  <!--<Canvas.RenderTransform>
 
     <ScaleTransform CenterX="0"
                     CenterY="0"
@@ -15,7 +16,7 @@
                     ScaleY="{Binding ElementName=UserControl, Path=ScaleFactor}" />
 
 
-  </Canvas.RenderTransform>
+  </Canvas.RenderTransform>-->
 
   <Rectangle Stroke="Gray" Width="{x:Static model:Coordinate.CELLSIZE}" Height="{x:Static model:Coordinate.CELLSIZE}" Canvas.Left="{Binding ElementName=UserControl, Path=Position.X}" Canvas.Top="{Binding ElementName=UserControl, Path=Position.Y}" RenderTransformOrigin="0.5 0.5" />
 </Canvas>
