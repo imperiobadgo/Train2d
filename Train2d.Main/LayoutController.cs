@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Train2d.Main.ViewModel.Items;
 using Train2d.Model;
+using Train2d.Model.Items;
 
 namespace Train2d.Main
 {
@@ -22,6 +24,19 @@ namespace Train2d.Main
       _content = new Dictionary<Guid, ItemViewModel>();
       _layout = new Dictionary<Coordinate, List<Guid>>();
       Items = new ObservableCollection<ItemViewModel>();
+    }
+
+    public static ItemViewModel GetItemViewModel(Item newItem)
+    {
+      if (newItem is Track)
+      {
+        return new TrackViewModel((Track)newItem);
+      }
+      if (newItem is Train)
+      {
+        //return new TrainV((Track)newItem);
+      }
+      return null;
     }
 
     #endregion
@@ -114,7 +129,7 @@ namespace Train2d.Main
       {
         return false;
       }
-      Guid newGuid = Guid.NewGuid();      
+      Guid newGuid = Guid.NewGuid();
       _content.Add(newGuid, newItem);
       newItem.SetGuid(newGuid);
       Items.Add(newItem);
@@ -150,6 +165,32 @@ namespace Train2d.Main
         return item;
       }
       return null;
+    }
+
+    #endregion
+
+    #region Methods - Modelconversion
+
+    public Layout GetLayout()
+    {
+      Layout result = new Layout();
+      result.ContentItems = _content.Select(x => x.Value.BaseItem()).ToList();
+      result.LayoutItems = _layout.Select(x => new LayoutPosition(x.Key, x.Value)).ToList();
+      return result;
+    }
+
+    public void SetLayout(Layout layout)
+    {
+      _layout.Clear();
+      _content.Clear();
+      Items.Clear();
+      layout.ContentItems.ForEach(x =>
+      {
+        ItemViewModel newItem = GetItemViewModel(x);
+        _content.Add(newItem.Id.Value, newItem);
+        Items.Add(newItem);
+      });
+      layout.LayoutItems.ForEach(x => _layout.Add(x.Position, x.ItemIds));
     }
 
     #endregion

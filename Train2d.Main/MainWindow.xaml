@@ -30,6 +30,7 @@
 
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
       <RowDefinition/>
     </Grid.RowDefinitions>
 
@@ -37,12 +38,19 @@
       <ColumnDefinition Width="*"/>
       <ColumnDefinition Width="Auto"/>
     </Grid.ColumnDefinitions>
-    
-    <StackPanel Grid.Row="0" Grid.Column="0">
+
+    <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+      <MenuItem Header="File">
+        <MenuItem Header="Open" Command="{Binding LoadLayoutCommand}"/>
+        <MenuItem Header="Save" Command="{Binding SaveLayoutCommand}"/>
+      </MenuItem>
+    </Menu>
+
+    <StackPanel Grid.Row="1" Grid.Column="0">
       <Label Content="{Binding SelectedView.FramesPerSecond}"/>
     </StackPanel>
-    
-    <controls:LayoutView Grid.Row="1" Grid.Column="0" Settings="{Binding Path=SelectedView.Settings, Mode=OneWay}" ShowControls="True">
+
+    <controls:LayoutView Grid.Row="2" Grid.Column="0" Settings="{Binding Path=SelectedView.Settings, Mode=OneWay}" ShowControls="True">
       <controls:LayoutView.CanvasContent>
         <Grid Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center" LayoutTransform="{StaticResource ResourceKey=Viewer2DSketchScale}">
           <layout:LayoutCoordinates ScaleFactor="{Binding Path=SelectedView.Settings.ScaleFactor, Mode=OneWay, Converter={StaticResource ResourceKey=ScaleInverseConverter}, ConverterParameter={StaticResource Viewer2DScaleFactor}}" />
@@ -87,13 +95,13 @@
       </controls:LayoutView.CanvasContent>
     </controls:LayoutView>
 
-    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
+    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
       <views:EditorView/>
     </StackPanel>
-    
+
   </Grid>
-  
-  
+
+
 
 </Window>
 

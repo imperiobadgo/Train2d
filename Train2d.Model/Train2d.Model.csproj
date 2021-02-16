@@ -48,6 +48,8 @@
     <Compile Include="Items\Signal.cs" />
     <Compile Include="Items\Track.cs" />
     <Compile Include="Items\Train.cs" />
+    <Compile Include="Layout.cs" />
+    <Compile Include="LayoutPosition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TrackOrientation.cs" />
   </ItemGroup>

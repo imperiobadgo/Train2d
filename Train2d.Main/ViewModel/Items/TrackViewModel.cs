@@ -12,6 +12,11 @@ namespace Train2d.Main.ViewModel.Items
       SetItem(new Track());
     }
 
+    public TrackViewModel(Track newTrack)
+    {
+      SetItem(newTrack);
+    }
+
     #endregion
 
     #region Methods
@@ -20,6 +25,7 @@ namespace Train2d.Main.ViewModel.Items
     {
       Orientation = newOrientation;
       NotifyPropertyChanged(nameof(Angle));
+      NotifyPropertyChanged(nameof(XScale));
     }
 
     #endregion

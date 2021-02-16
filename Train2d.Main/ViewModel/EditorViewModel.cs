@@ -16,6 +16,7 @@ namespace Train2d.Main.ViewModel
     private bool _placeTrain;
     private Coordinate _mouseCoordinate;
     private bool _validPosition;
+    private TrackViewModel _previewTrack;
 
     #endregion
 
@@ -26,6 +27,7 @@ namespace Train2d.Main.ViewModel
       _parent = parent;
       _parent.Settings.SetOnMouseLeftButtonDownAction(OnMouseLeftButtonUp);
       _parent.Settings.SetOnMouseMoveAction(OnMouseMove);
+      _previewTrack = new TrackViewModel();
     }
 
 
@@ -39,24 +41,7 @@ namespace Train2d.Main.ViewModel
       if (PlaceTracks)
       {
         TrackViewModel newTrack = new TrackViewModel();
-        TrackOrientation orientation;
-        if (Vertical)
-        {
-          orientation = TrackOrientation.Vertical;
-        }
-        else if (Diagonal)
-        {
-          orientation = TrackOrientation.Diagonal;
-        }
-        else if (AntiDiagonal)
-        {
-          orientation = TrackOrientation.AntiDiagonal;
-        }
-        else
-        {
-          //Backup case
-          orientation = TrackOrientation.Horizontal;
-        }
+        TrackOrientation orientation = GetSelectedTrackOrientation();
         List<CommandBase> commands = new List<CommandBase>();
         commands.Add(new CreateItemCommand(_parent, newTrack));
         commands.Add(new PositionItemCommand(_parent, newTrack, _mouseCoordinate));
@@ -82,6 +67,7 @@ namespace Train2d.Main.ViewModel
       if (PlaceTracks)
       {
         _validPosition = !itemAtCoordinate.OfType<TrackViewModel>().Any();
+        UpdatePreviewTrack();
       }
       if (PlaceTrain)
       {
@@ -89,6 +75,7 @@ namespace Train2d.Main.ViewModel
       }
       NotifyPropertyChanged(nameof(ValidPosition));
     }
+
 
     #endregion
 
@@ -101,12 +88,49 @@ namespace Train2d.Main.ViewModel
 
     #region Placement Tracks
 
+    private void UpdatePreviewTrack()
+    {
+      _previewTrack.SetCoordinate(_mouseCoordinate);
+      _previewTrack.SetOrientation(GetSelectedTrackOrientation());
+    }
+
+    private TrackOrientation GetSelectedTrackOrientation()
+    {
+      TrackOrientation orientation;
+      if (Vertical)
+      {
+        orientation = TrackOrientation.Vertical;
+      }
+      else if (Diagonal)
+      {
+        orientation = TrackOrientation.Diagonal;
+      }
+      else if (AntiDiagonal)
+      {
+        orientation = TrackOrientation.AntiDiagonal;
+      }
+      else
+      {
+        //Backup case
+        orientation = TrackOrientation.Horizontal;
+      }
+      return orientation;
+    }
+
     public bool PlaceTracks
     {
       get => _placeTracks;
       set
       {
+        if (_placeTracks)
+        {
+          _parent.LayoutController.Items.Remove(_previewTrack);
+        }
         _placeTracks = value;
+        if (_placeTracks)
+        {
+          _parent.LayoutController.Items.Add(_previewTrack);
+        }
         NotifyPropertyChanged(nameof(PlaceTracks));
       }
     }

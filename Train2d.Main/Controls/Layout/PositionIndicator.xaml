@@ -8,15 +8,5 @@
              x:Name="UserControl"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-  <!--<Canvas.RenderTransform>
-
-    <ScaleTransform CenterX="0"
-                    CenterY="0"
-                    ScaleX="{Binding ElementName=UserControl, Path=ScaleFactor}"
-                    ScaleY="{Binding ElementName=UserControl, Path=ScaleFactor}" />
-
-
-  </Canvas.RenderTransform>-->
-
   <Rectangle Stroke="Gray" Width="{x:Static model:Coordinate.CELLSIZE}" Height="{x:Static model:Coordinate.CELLSIZE}" Canvas.Left="{Binding ElementName=UserControl, Path=Position.X}" Canvas.Top="{Binding ElementName=UserControl, Path=Position.Y}" RenderTransformOrigin="0.5 0.5" />
 </Canvas>
