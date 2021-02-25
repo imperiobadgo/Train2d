@@ -13,6 +13,7 @@ namespace Train2d.Main.ViewModel
 
     private readonly LayoutViewModel _parent;
     private bool _placeTracks;
+    private bool _removeTracks;
     private bool _placeTrain;
     private Coordinate _mouseCoordinate;
     private bool _validPosition;
@@ -49,6 +50,16 @@ namespace Train2d.Main.ViewModel
         CommandChain commandChain = new CommandChain(commands);
         _parent.GetCommandController().AddCommandAndExecute(commandChain);
       }
+      if (RemoveTracks)
+      {
+        List<ItemViewModel> items = _parent.LayoutController.GetLayoutItems(_mouseCoordinate);
+        foreach (var item in items)
+        {
+          DeleteItemCommand deleteCommand = new DeleteItemCommand(_parent, item);
+          _parent.GetCommandController().AddCommandAndExecute(deleteCommand);
+        }
+      }
+
       if (PlaceTrain)
       {
 
@@ -69,6 +80,11 @@ namespace Train2d.Main.ViewModel
         _validPosition = !itemAtCoordinate.OfType<TrackViewModel>().Any();
         UpdatePreviewTrack();
       }
+      if (RemoveTracks)
+      {
+        _validPosition = itemAtCoordinate.Any();
+      }
+
       if (PlaceTrain)
       {
         _validPosition = itemAtCoordinate.OfType<TrackViewModel>().Any();
@@ -132,6 +148,16 @@ namespace Train2d.Main.ViewModel
           _parent.LayoutController.Items.Add(_previewTrack);
         }
         NotifyPropertyChanged(nameof(PlaceTracks));
+      }
+    }
+
+    public bool RemoveTracks
+    {
+      get => _removeTracks;
+      set
+      {
+        _removeTracks = value;
+        NotifyPropertyChanged(nameof(RemoveTracks));
       }
     }
 

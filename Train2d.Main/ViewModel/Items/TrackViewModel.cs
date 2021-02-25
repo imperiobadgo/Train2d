@@ -1,4 +1,5 @@
-﻿using Train2d.Model;
+﻿using System.Collections.Generic;
+using Train2d.Model;
 using Train2d.Model.Items;
 
 namespace Train2d.Main.ViewModel.Items
@@ -26,6 +27,37 @@ namespace Train2d.Main.ViewModel.Items
       Orientation = newOrientation;
       NotifyPropertyChanged(nameof(Angle));
       NotifyPropertyChanged(nameof(XScale));
+    }
+
+    public List<TrackOrientation> GetAdjacentTrackOrientations()
+    {
+      List<TrackOrientation> orientations = new List<TrackOrientation>();
+      switch (Orientation)
+      {
+        case TrackOrientation.Horizontal:
+          orientations.Add(TrackOrientation.Horizontal);
+          orientations.Add(TrackOrientation.Diagonal);
+          orientations.Add(TrackOrientation.AntiDiagonal);
+          break;
+        case TrackOrientation.Vertical:
+          orientations.Add(TrackOrientation.Vertical);
+          orientations.Add(TrackOrientation.Diagonal);
+          orientations.Add(TrackOrientation.AntiDiagonal);
+          break;
+        case TrackOrientation.Diagonal:
+          orientations.Add(TrackOrientation.Horizontal);
+          orientations.Add(TrackOrientation.Vertical);
+          orientations.Add(TrackOrientation.Diagonal);          
+          break;
+        case TrackOrientation.AntiDiagonal:
+          orientations.Add(TrackOrientation.Horizontal);
+          orientations.Add(TrackOrientation.Vertical);
+          orientations.Add(TrackOrientation.AntiDiagonal);
+          break;
+        default:
+          break;
+      }
+      return orientations;
     }
 
     #endregion

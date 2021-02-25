@@ -98,7 +98,7 @@ namespace Train2d.Main
     /// Returns all LayoutItems at this Coordinate
     /// </summary>
     /// <returns>if no Items are found, the array contains 0 elements</returns>
-    public ItemViewModel[] GetLayoutItems(Coordinate position)
+    public List<ItemViewModel> GetLayoutItems(Coordinate position)
     {
       List<ItemViewModel> result = new List<ItemViewModel>();
       if (_layout.TryGetValue(position, out List<Guid> itemsAtPosition))
@@ -112,7 +112,7 @@ namespace Train2d.Main
           }
         }
       }
-      return result.ToArray();
+      return result;
     }
 
     #endregion
