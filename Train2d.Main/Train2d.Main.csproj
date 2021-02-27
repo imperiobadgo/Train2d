@@ -113,6 +113,7 @@
     <Compile Include="LayoutController.cs" />
     <Compile Include="Serialization\SerializerContainer.cs" />
     <Compile Include="Serialization\XmlGuidListConverter.cs" />
+    <Compile Include="UserSettings.cs" />
     <Compile Include="ViewModel\Items\ItemViewModel.cs" />
     <Compile Include="ViewModel\EditorViewModel.cs" />
     <Compile Include="ViewModel\Items\ItemGenericViewModel.cs" />

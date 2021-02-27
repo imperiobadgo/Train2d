@@ -15,6 +15,7 @@ namespace Train2d.Main.ViewModel
     public MainWindowViewModel()
     {
       CommandController = new CommandController();
+      UserSettings = new UserSettings();
       InitializeCommands();
       Layouts = new List<LayoutViewModel>();
       Layouts.Add(new LayoutViewModel(this));
@@ -105,6 +106,8 @@ namespace Train2d.Main.ViewModel
     public List<LayoutViewModel> Layouts;
 
     public LayoutViewModel SelectedView { get; set; }
+
+    public UserSettings UserSettings { get; set; }
 
     public CommandController CommandController { get; private set; }
 

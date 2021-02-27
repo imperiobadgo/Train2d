@@ -34,31 +34,54 @@ namespace Train2d.Main.Controls
     private void InitializeMouseHandler()
     {
       UserControl.MouseWheel += OnContentMouseWheel;
-      ZoomContent.MouseLeftButtonDown += OnContentMouseLeftButtonDown;
-      ZoomContent.MouseRightButtonDown += OnContentMouseRightButtonDown;
-      ZoomContent.MouseLeftButtonUp += OnContentMouseLeftButtonUp;
-      ZoomContent.MouseRightButtonUp += OnContentMouseRightButtonUp;
+      ZoomContent.MouseDown += OnContentMouseButtonDown;
+      ZoomContent.MouseUp += OnContentMouseButtonUp;
       UserControl.MouseMove += OnContentMouseMove;
-      UserControl.MouseLeftButtonDown += OnContentMouseLeftButtonDown;
-      UserControl.MouseRightButtonDown += OnContentMouseRightButtonDown;
+      UserControl.MouseDown += OnContentMouseButtonDown;
+      UserControl.MouseUp += OnContentMouseButtonUp;
+    }
+
+    private void OnContentMouseButtonDown(object sender, MouseButtonEventArgs e)
+    {
+      if (e.ChangedButton == UserSettings.SelectMain)
+        Settings.ExecuteSelectMain();
+      if (e.ChangedButton == UserSettings.SelectSub)
+        Settings.ExecuteSelectSub();
+      if (e.ChangedButton == UserSettings.SelectDrag)
+      {
+        if (e.ClickCount == 2)
+        {
+          ResetZoomAndScroll();
+          return;
+        }
+
+        _start = e.GetPosition(LayoutGrid);
+
+        _newPosition.X = Settings.Translate.X;
+        _newPosition.Y = Settings.Translate.Y;
+
+        // The previous mouse capture was done here, but this stopped inner MouseRightButtonUp from working
+        // ZoomContent.CaptureMouse()
+        _allowTranslate = true;
+      }
+    }
+
+    private void OnContentMouseButtonUp(object sender, MouseButtonEventArgs e)
+    {
+      if (e.ChangedButton == UserSettings.SelectMain)
+        Settings.ExecuteDeselectMain();
+      if (e.ChangedButton == UserSettings.SelectSub)
+        Settings.ExecuteDeselectSub();
+      if (e.ChangedButton == UserSettings.SelectDrag)
+      {
+        ZoomContent.ReleaseMouseCapture();
+        _allowTranslate = false;
+      }
     }
 
     #endregion
 
     #region Methods
-
-    private void OnContentMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-    {
-      Settings.ExecuteMouseLeftButtonUp();
-      //ZoomContent.ReleaseMouseCapture();
-      //_allowTranslate = false;
-    }
-
-    private void OnContentMouseRightButtonUp(object sender, MouseButtonEventArgs e)
-    {
-      ZoomContent.ReleaseMouseCapture();
-      _allowTranslate = false;
-    }
 
     private void OnContentMouseMove(object sender, MouseEventArgs e)
     {
@@ -78,9 +101,20 @@ namespace Train2d.Main.Controls
 
     private void OnContentMouseMoveTranslate(MouseEventArgs e)
     {
+      bool correctButtonPressed = false;
+      if (UserSettings.SelectDrag == MouseButton.Left && e.LeftButton == MouseButtonState.Pressed)
+        correctButtonPressed = true;
+      if (UserSettings.SelectDrag == MouseButton.Right && e.RightButton == MouseButtonState.Pressed)
+        correctButtonPressed = true;
+      if (UserSettings.SelectDrag == MouseButton.Middle && e.MiddleButton == MouseButtonState.Pressed)
+        correctButtonPressed = true;
+      if (UserSettings.SelectDrag == MouseButton.XButton1 && e.XButton1 == MouseButtonState.Pressed)
+        correctButtonPressed = true;
+      if (UserSettings.SelectDrag == MouseButton.XButton2 && e.XButton2 == MouseButtonState.Pressed)
+        correctButtonPressed = true;
 
       // Capture mouse here to allow clicking child elements
-      if (_allowTranslate && e.RightButton == MouseButtonState.Pressed && !ZoomContent.IsMouseCaptured)
+      if (_allowTranslate && correctButtonPressed && !ZoomContent.IsMouseCaptured)
         ZoomContent.CaptureMouse();
 
       if (!ZoomContent.IsMouseCaptured)
@@ -104,13 +138,12 @@ namespace Train2d.Main.Controls
       var zoomBoxOrigin = Settings.Translate.Transform(zoomBoxCenter);
 
       var posRelativeToCenter = absoluteMousePositionOnZoomBox - zoomBoxOrigin;
-      
+
       posRelativeToCenter.Y = -posRelativeToCenter.Y;
       posRelativeToCenter /= (double)Settings.ScaleFactor;
 
       MousePoint = new Point(posRelativeToCenter.X, posRelativeToCenter.Y);
       Settings.MousePosition = MousePoint;
-      
     }
 
     private static Point GetPosition(Point zoomBoxCenter, LayoutViewSettings settings, Point mousePos)
@@ -122,45 +155,7 @@ namespace Train2d.Main.Controls
       posRelativeToCenter.Y = -posRelativeToCenter.Y;
       posRelativeToCenter /= (double)settings.ScaleFactor;
       return new Point(posRelativeToCenter.X, posRelativeToCenter.Y);
-    }
-
-
-    private void OnContentMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-      Settings.ExecuteMouseLeftButtonDown();
-      //if (e.ClickCount == 2)
-      //{
-      //  ResetZoomAndScroll();
-      //  return;
-      //}
-
-      //_start = e.GetPosition(LayoutGrid);
-
-      //_newPosition.X = Settings.Translate.X;
-      //_newPosition.Y = Settings.Translate.Y;
-
-      //// The previous mouse capture was done here, but this stopped inner MouseLeftButtonUp from working
-      //// ZoomContent.CaptureMouse()
-      //_allowTranslate = true;
-    }
-
-    private void OnContentMouseRightButtonDown(object sender, MouseButtonEventArgs e)
-    {
-      if (e.ClickCount == 2)
-      {
-        ResetZoomAndScroll();
-        return;
-      }
-
-      _start = e.GetPosition(LayoutGrid);
-
-      _newPosition.X = Settings.Translate.X;
-      _newPosition.Y = Settings.Translate.Y;
-
-      // The previous mouse capture was done here, but this stopped inner MouseRightButtonUp from working
-      // ZoomContent.CaptureMouse()
-      _allowTranslate = true;
-    }
+    }    
 
     private void OnContentMouseWheel(object sender, MouseWheelEventArgs e)
     {
@@ -170,8 +165,9 @@ namespace Train2d.Main.Controls
       var zoomBoxCenter = new Point(ActualWidth / (double)2, ActualHeight / (double)2);
       var p1 = GetPosition(zoomBoxCenter, Settings, mousePos);
 
-      double zoom = e.Delta > 0 ? 0.2 : -0.2;
-      Settings.SetZoom(zoom);
+      double zoom = e.Delta > 0 ? UserSettings.ZoomIncrements : -UserSettings.ZoomIncrements;
+      double linearZoom = Settings.ScaleFactor * zoom;//Convert to linear zoom for consistent zoom change at small and big zoom factor
+      Settings.SetZoom(linearZoom);
 
       var p2 = GetPosition(zoomBoxCenter, Settings, mousePos);
       var delta = (p2 - p1);
@@ -183,8 +179,6 @@ namespace Train2d.Main.Controls
         Settings.Translate.Y -= delta.Y;
       }
     }
-
-
 
     private void ResetZoomAndScroll()
     {
@@ -305,7 +299,37 @@ namespace Train2d.Main.Controls
       view.ShowPositionY = view.Settings.ShowPositionY;
     }
 
+    public UserSettings UserSettings
+    {
+      get
+      {
+        return (UserSettings)GetValue(UserSettingsProperty);
+      }
+      set
+      {
+        SetValue(UserSettingsProperty, value);
+      }
+    }
 
+    public static readonly DependencyProperty UserSettingsProperty = DependencyProperty.Register(
+      nameof(UserSettings),
+      typeof(UserSettings),
+      typeof(LayoutView),
+      new PropertyMetadata(
+        new UserSettings(),
+        OnUserSettingsChanged));
+
+    public static void OnUserSettingsChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+    {
+      var view = sender as LayoutView;
+      if (view == null)
+        return;
+
+      //// Dim group As TransformGroup = view.Settings.Group
+      //view.ZoomContent.RenderTransform = view.Settings.Group;
+      //view.ShowControls = view.Settings.ShowSettings;
+      //view.ShowPositionY = view.Settings.ShowPositionY;
+    }
 
     public double VisualWidth
     {

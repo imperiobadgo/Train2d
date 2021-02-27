@@ -12,11 +12,11 @@
   </UserControl.Resources>
   <Grid Name="LayoutGrid" Background="White">
     <AdornerDecorator ClipToBounds="True">
-      <AdornerDecorator.ContextMenu>
+      <!--<AdornerDecorator.ContextMenu>
         <ContextMenu>
           <MenuItem Header="Keep drawing in frame" IsCheckable="True" IsChecked= "True"/>
         </ContextMenu>
-      </AdornerDecorator.ContextMenu>
+      </AdornerDecorator.ContextMenu>-->
 
       <Border x:Name="ZoomContent" RenderTransformOrigin="0.5,0.5"  RenderOptions.BitmapScalingMode="Fant" IsManipulationEnabled="True">
         <ContentControl Content="{Binding ElementName=UserControl, Path=CanvasContent}"/>

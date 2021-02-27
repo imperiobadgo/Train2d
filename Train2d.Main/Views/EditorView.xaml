@@ -10,10 +10,9 @@
   <StackPanel>
     <CheckBox Content="Valid Position" IsChecked="{Binding Path=SelectedView.EditorController.ValidPosition}"/>
     <RadioButton GroupName="EditorMode" Content="Nothing" IsChecked="True"/>
-    <RadioButton GroupName="EditorMode" Content="Place Tracks" IsChecked="{Binding Path=SelectedView.EditorController.PlaceTracks}"/>
-    <RadioButton GroupName="EditorMode" Content="Remove Tracks" IsChecked="{Binding Path=SelectedView.EditorController.RemoveTracks}"/>
+    <RadioButton GroupName="EditorMode" Content="Edit Tracks" IsChecked="{Binding Path=SelectedView.EditorController.EditTracks}"/>
     <RadioButton GroupName="EditorMode" Content="Add Train" IsChecked="{Binding Path=SelectedView.EditorController.PlaceTrain}"/>
-    <GroupBox IsEnabled="{Binding Path=SelectedView.EditorController.PlaceTracks}">
+    <GroupBox IsEnabled="{Binding Path=SelectedView.EditorController.EditTracks}">
       <StackPanel>
         <RadioButton Content="Horizontal" GroupName="Orientation" Grid.Row="0" Grid.Column="1" IsChecked="{Binding Path=SelectedView.EditorController.Horizontal}"/>
         <RadioButton Content="Vertical" GroupName="Orientation" Grid.Row="0" Grid.Column="1" IsChecked="{Binding Path=SelectedView.EditorController.Vertical}"/>

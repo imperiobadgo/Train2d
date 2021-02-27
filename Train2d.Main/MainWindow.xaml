@@ -50,7 +50,7 @@
       <Label Content="{Binding SelectedView.FramesPerSecond}"/>
     </StackPanel>
 
-    <controls:LayoutView Grid.Row="2" Grid.Column="0" Settings="{Binding Path=SelectedView.Settings, Mode=OneWay}" ShowControls="True">
+    <controls:LayoutView Grid.Row="2" Grid.Column="0" Settings="{Binding Path=SelectedView.Settings, Mode=OneWay}" UserSettings="{Binding Path=UserSettings, Mode=OneWay}" ShowControls="True">
       <controls:LayoutView.CanvasContent>
         <Grid Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center" LayoutTransform="{StaticResource ResourceKey=Viewer2DSketchScale}">
           <layout:LayoutCoordinates ScaleFactor="{Binding Path=SelectedView.Settings.ScaleFactor, Mode=OneWay, Converter={StaticResource ResourceKey=ScaleInverseConverter}, ConverterParameter={StaticResource Viewer2DScaleFactor}}" />

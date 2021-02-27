@@ -13,8 +13,10 @@ namespace Train2d.Main.Controls
     #region Attributes
 
     private double _scaleFactor = 1.0;
-    private Action _onMouseLeftButtonDownAction;
-    private Action _onMouseLeftButtonUpAction;
+    private Action _onSelectMainAction;
+    private Action _onDeselectMainAction;
+    private Action _onSelectSubAction;
+    private Action _onDeselectSubAction;
     private Action _onMouseMoveAction;
     private Action _onMouseCoordinateChangedAction;
     private Coordinate _mouseCoordinate;
@@ -33,30 +35,22 @@ namespace Train2d.Main.Controls
       Group.Children.Add(Translate);
     }
 
-    public LayoutViewSettings(Action onMouseLeftButtonDownAction) : this()
+    public LayoutViewSettings(Action onSelectMainAction) : this()
     {
-      _onMouseLeftButtonDownAction = onMouseLeftButtonDownAction;
+      _onSelectMainAction = onSelectMainAction;
     }
 
-    public void SetOnMouseLeftButtonDownAction(Action onMouseLeftButtonDownAction)
-    {
-      _onMouseLeftButtonDownAction = onMouseLeftButtonDownAction;
-    }
+    public void SetOnSelectMainAction(Action onSelectMainAction) => _onSelectMainAction = onSelectMainAction;
 
-    public void SetOnMouseLeftButtonUpAction(Action onMouseLeftButtonUpAction)
-    {
-      _onMouseLeftButtonUpAction = onMouseLeftButtonUpAction;
-    }
+    public void SetOnDeselectMainAction(Action onDeselectMainAction) => _onDeselectMainAction = onDeselectMainAction;
 
-    public void SetOnMouseMoveAction(Action onMouseMoveAction)
-    {
-      _onMouseMoveAction = onMouseMoveAction;
-    }
+    public void SetOnSelectSubAction(Action onSelectSubAction) => _onSelectSubAction = onSelectSubAction;
 
-    public void SetOnMouseCoordinateChangedAction(Action onMouseCoordinateChangedAction)
-    {
-      _onMouseCoordinateChangedAction = onMouseCoordinateChangedAction;
-    }
+    public void SetOnDeselectSubAction(Action onDeselectSubAction) => _onDeselectSubAction = onDeselectSubAction;
+
+    public void SetOnMouseMoveAction(Action onMouseMoveAction) => _onMouseMoveAction = onMouseMoveAction;
+
+    public void SetOnMouseCoordinateChangedAction(Action onMouseCoordinateChangedAction) => _onMouseCoordinateChangedAction = onMouseCoordinateChangedAction;
 
     #endregion
 
@@ -93,25 +87,17 @@ namespace Train2d.Main.Controls
       Translate.Y = offset.Y;
     }
 
-    public void ExecuteMouseLeftButtonDown()
-    {
-      _onMouseLeftButtonDownAction?.Invoke();
-    }
+    public void ExecuteSelectMain() => _onSelectMainAction?.Invoke();
 
-    public void ExecuteMouseLeftButtonUp()
-    {
-      _onMouseLeftButtonUpAction?.Invoke();
-    }
+    public void ExecuteDeselectMain() => _onDeselectMainAction?.Invoke();
 
-    public void ExecuteMouseMove()
-    {
-      _onMouseMoveAction?.Invoke();
-    }
+    public void ExecuteSelectSub() => _onSelectSubAction?.Invoke();
 
-    public void ExecuteMouseCoordinateChanged()
-    {
-      _onMouseCoordinateChangedAction?.Invoke();
-    }
+    public void ExecuteDeselectSub() => _onDeselectSubAction?.Invoke();
+
+    public void ExecuteMouseMove() => _onMouseMoveAction?.Invoke();
+
+    public void ExecuteMouseCoordinateChanged() => _onMouseCoordinateChangedAction?.Invoke();
 
     #endregion
 

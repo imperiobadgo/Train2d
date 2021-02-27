@@ -12,8 +12,7 @@ namespace Train2d.Main.ViewModel
     #region Attributes
 
     private readonly LayoutViewModel _parent;
-    private bool _placeTracks;
-    private bool _removeTracks;
+    private bool _editTracks;
     private bool _placeTrain;
     private Coordinate _mouseCoordinate;
     private bool _validPosition;
@@ -26,7 +25,8 @@ namespace Train2d.Main.ViewModel
     public EditorViewModel(LayoutViewModel parent)
     {
       _parent = parent;
-      _parent.Settings.SetOnMouseLeftButtonDownAction(OnMouseLeftButtonUp);
+      _parent.Settings.SetOnSelectMainAction(OnSelectMain);
+      _parent.Settings.SetOnSelectSubAction(OnSelectSub);
       _parent.Settings.SetOnMouseMoveAction(OnMouseMove);
       _previewTrack = new TrackViewModel();
     }
@@ -37,9 +37,9 @@ namespace Train2d.Main.ViewModel
 
     #region Methods
 
-    private void OnMouseLeftButtonUp()
+    private void OnSelectMain()
     {
-      if (PlaceTracks)
+      if (EditTracks)
       {
         TrackViewModel newTrack = new TrackViewModel();
         TrackOrientation orientation = GetSelectedTrackOrientation();
@@ -50,7 +50,16 @@ namespace Train2d.Main.ViewModel
         CommandChain commandChain = new CommandChain(commands);
         _parent.GetCommandController().AddCommandAndExecute(commandChain);
       }
-      if (RemoveTracks)
+
+      if (PlaceTrain)
+      {
+
+      }
+    }
+
+    private void OnSelectSub()
+    {
+      if (EditTracks)
       {
         List<ItemViewModel> items = _parent.LayoutController.GetLayoutItems(_mouseCoordinate);
         foreach (var item in items)
@@ -58,11 +67,6 @@ namespace Train2d.Main.ViewModel
           DeleteItemCommand deleteCommand = new DeleteItemCommand(_parent, item);
           _parent.GetCommandController().AddCommandAndExecute(deleteCommand);
         }
-      }
-
-      if (PlaceTrain)
-      {
-
       }
     }
 
@@ -75,14 +79,10 @@ namespace Train2d.Main.ViewModel
       }
       _mouseCoordinate = newMouseCoordinate;
       var itemAtCoordinate = _parent.LayoutController.GetLayoutItems(_mouseCoordinate);
-      if (PlaceTracks)
+      if (EditTracks)
       {
         _validPosition = !itemAtCoordinate.OfType<TrackViewModel>().Any();
         UpdatePreviewTrack();
-      }
-      if (RemoveTracks)
-      {
-        _validPosition = itemAtCoordinate.Any();
       }
 
       if (PlaceTrain)
@@ -133,31 +133,21 @@ namespace Train2d.Main.ViewModel
       return orientation;
     }
 
-    public bool PlaceTracks
+    public bool EditTracks
     {
-      get => _placeTracks;
+      get => _editTracks;
       set
       {
-        if (_placeTracks)
+        if (_editTracks)
         {
           _parent.LayoutController.Items.Remove(_previewTrack);
         }
-        _placeTracks = value;
-        if (_placeTracks)
+        _editTracks = value;
+        if (_editTracks)
         {
           _parent.LayoutController.Items.Add(_previewTrack);
         }
-        NotifyPropertyChanged(nameof(PlaceTracks));
-      }
-    }
-
-    public bool RemoveTracks
-    {
-      get => _removeTracks;
-      set
-      {
-        _removeTracks = value;
-        NotifyPropertyChanged(nameof(RemoveTracks));
+        NotifyPropertyChanged(nameof(EditTracks));
       }
     }
 
