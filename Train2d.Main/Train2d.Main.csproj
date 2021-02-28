@@ -117,7 +117,10 @@
     <Compile Include="ViewModel\Items\ItemViewModel.cs" />
     <Compile Include="ViewModel\EditorViewModel.cs" />
     <Compile Include="ViewModel\Items\ItemGenericViewModel.cs" />
+    <Compile Include="ViewModel\Items\SignalViewModel.cs" />
+    <Compile Include="ViewModel\Items\TrackSwitchViewModel.cs" />
     <Compile Include="ViewModel\Items\TrackViewModel.cs" />
+    <Compile Include="ViewModel\Items\TrainViewModel.cs" />
     <Compile Include="ViewModel\LayoutViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />

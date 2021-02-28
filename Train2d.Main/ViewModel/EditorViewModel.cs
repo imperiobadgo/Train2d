@@ -14,6 +14,7 @@ namespace Train2d.Main.ViewModel
     private readonly LayoutViewModel _parent;
     private bool _editTracks;
     private bool _placeTrain;
+    private bool _editSignals;
     private Coordinate _mouseCoordinate;
     private bool _validPosition;
     private TrackViewModel _previewTrack;
@@ -39,22 +40,36 @@ namespace Train2d.Main.ViewModel
 
     private void OnSelectMain()
     {
+      List<CommandBase> commands = new List<CommandBase>();
       if (EditTracks)
       {
         TrackViewModel newTrack = new TrackViewModel();
         TrackOrientation orientation = GetSelectedTrackOrientation();
-        List<CommandBase> commands = new List<CommandBase>();
         commands.Add(new CreateItemCommand(_parent, newTrack));
         commands.Add(new PositionItemCommand(_parent, newTrack, _mouseCoordinate));
         commands.Add(new OrientateTrackCommand(_parent, newTrack, orientation));
-        CommandChain commandChain = new CommandChain(commands);
-        _parent.GetCommandController().AddCommandAndExecute(commandChain);
       }
 
       if (PlaceTrain)
       {
-
+        TrainViewModel newTrain = new TrainViewModel();
+        commands.Add(new CreateItemCommand(_parent, newTrain));
+        commands.Add(new PositionItemCommand(_parent, newTrain, _mouseCoordinate));
       }
+
+      if (EditSignals)
+      {
+        SignalViewModel newSignal = new SignalViewModel();
+        commands.Add(new CreateItemCommand(_parent, newSignal));
+        commands.Add(new PositionItemCommand(_parent, newSignal, _mouseCoordinate));
+      }
+
+      if (commands.Count > 0)
+      {
+        CommandChain commandChain = new CommandChain(commands);
+        _parent.GetCommandController().AddCommandAndExecute(commandChain);
+      }
+
     }
 
     private void OnSelectSub()
@@ -68,6 +83,7 @@ namespace Train2d.Main.ViewModel
           _parent.GetCommandController().AddCommandAndExecute(deleteCommand);
         }
       }
+
     }
 
     private void OnMouseMove()
@@ -170,6 +186,20 @@ namespace Train2d.Main.ViewModel
       {
         _placeTrain = value;
         NotifyPropertyChanged(nameof(PlaceTrain));
+      }
+    }
+
+    #endregion
+
+    #region Signals
+
+    public bool EditSignals
+    {
+      get => _editSignals;
+      set
+      {
+        _editSignals = value;
+        NotifyPropertyChanged(nameof(EditSignals));
       }
     }
 

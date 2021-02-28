@@ -74,7 +74,7 @@
                   Value="{Binding Path=Position.Y, Mode=OneWay}"/>
               </Style>
             </ItemsControl.ItemContainerStyle>
-            <ItemsControl.ItemTemplate>
+            <ItemsControl.Resources>
               <DataTemplate DataType="{x:Type items:TrackViewModel}">
                 <Rectangle Width="{x:Static model:Coordinate.CELLSIZE}" Height="4" Fill="Aqua" Stroke="Black">
                   <Rectangle.RenderTransform>
@@ -88,7 +88,28 @@
                 </Rectangle>
               </DataTemplate>
 
-            </ItemsControl.ItemTemplate>
+              <DataTemplate DataType="{x:Type items:TrainViewModel}">
+                <Ellipse Width="7" Height="7" Fill="DarkBlue">
+                  <Ellipse.RenderTransform>
+                    <TransformGroup>
+                      <TranslateTransform X="-3.5" Y="-3.5"/>
+                      <TranslateTransform X="{x:Static model:Coordinate.HALFCELLSIZE}" Y="{x:Static model:Coordinate.HALFCELLSIZE}"/>
+                    </TransformGroup>
+                  </Ellipse.RenderTransform>
+                </Ellipse>
+              </DataTemplate>
+
+              <DataTemplate DataType="{x:Type items:SignalViewModel}">
+                <Rectangle Width="10" Height="10" Fill="Green">
+                  <Rectangle.RenderTransform>
+                    <TransformGroup>
+                      <TranslateTransform X="-5" Y="-5"/>
+                      <TranslateTransform X="{x:Static model:Coordinate.HALFCELLSIZE}" Y="{x:Static model:Coordinate.HALFCELLSIZE}"/>
+                    </TransformGroup>
+                  </Rectangle.RenderTransform>
+                </Rectangle>
+              </DataTemplate>
+            </ItemsControl.Resources>
           </ItemsControl>
 
         </Grid>

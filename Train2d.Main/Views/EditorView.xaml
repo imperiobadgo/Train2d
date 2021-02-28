@@ -11,7 +11,6 @@
     <CheckBox Content="Valid Position" IsChecked="{Binding Path=SelectedView.EditorController.ValidPosition}"/>
     <RadioButton GroupName="EditorMode" Content="Nothing" IsChecked="True"/>
     <RadioButton GroupName="EditorMode" Content="Edit Tracks" IsChecked="{Binding Path=SelectedView.EditorController.EditTracks}"/>
-    <RadioButton GroupName="EditorMode" Content="Add Train" IsChecked="{Binding Path=SelectedView.EditorController.PlaceTrain}"/>
     <GroupBox IsEnabled="{Binding Path=SelectedView.EditorController.EditTracks}">
       <StackPanel>
         <RadioButton Content="Horizontal" GroupName="Orientation" Grid.Row="0" Grid.Column="1" IsChecked="{Binding Path=SelectedView.EditorController.Horizontal}"/>
@@ -20,6 +19,9 @@
         <RadioButton Content="Antidiagonal" GroupName="Orientation" Grid.Row="0" Grid.Column="1" IsChecked="{Binding Path=SelectedView.EditorController.AntiDiagonal}"/>
       </StackPanel>
     </GroupBox>
+    <RadioButton GroupName="EditorMode" Content="Add Train" IsChecked="{Binding Path=SelectedView.EditorController.PlaceTrain}"/>
+    <RadioButton GroupName="EditorMode" Content="Edit Signals" IsChecked="{Binding Path=SelectedView.EditorController.EditSignals}"/>
+
 
 
   </StackPanel>

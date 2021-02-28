@@ -32,9 +32,17 @@ namespace Train2d.Main
       {
         return new TrackViewModel((Track)newItem);
       }
+      if (newItem is TrackSwitch)
+      {
+        return new TrackSwitchViewModel((TrackSwitch)newItem);
+      }
       if (newItem is Train)
       {
-        //return new TrainV((Track)newItem);
+        return new TrainViewModel((Train)newItem);
+      }
+      if (newItem is Signal)
+      {
+        return new SignalViewModel((Signal)newItem);
       }
       return null;
     }
