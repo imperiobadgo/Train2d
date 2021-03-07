@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-
+using System.Windows.Media;
 
 namespace Train2d.Main.Controls.Layout
 {
@@ -56,5 +56,28 @@ namespace Train2d.Main.Controls.Layout
       new PropertyMetadata(new Vector(0,0)));
 
     #endregion
+
+    #region Color
+
+    public Brush Color
+    {
+      get
+      {
+        return (Brush)GetValue(ColorProperty);
+      }
+      set
+      {
+        SetValue(ColorProperty, value);
+      }
+    }
+
+    public static readonly DependencyProperty ColorProperty = DependencyProperty.Register(
+      nameof(Color),
+      typeof(Brush),
+      typeof(PositionIndicator),
+      new PropertyMetadata(Brushes.Gray));
+
+    #endregion
+
   }
 }

@@ -8,5 +8,5 @@
              x:Name="UserControl"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-  <Rectangle Stroke="Gray" Width="{x:Static model:Coordinate.CELLSIZE}" Height="{x:Static model:Coordinate.CELLSIZE}" Canvas.Left="{Binding ElementName=UserControl, Path=Position.X}" Canvas.Top="{Binding ElementName=UserControl, Path=Position.Y}" RenderTransformOrigin="0.5 0.5" />
+  <Rectangle Stroke="{Binding ElementName=UserControl, Path=Color}" Width="{x:Static model:Coordinate.CELLSIZE}" Height="{x:Static model:Coordinate.CELLSIZE}" Canvas.Left="{Binding ElementName=UserControl, Path=Position.X}" Canvas.Top="{Binding ElementName=UserControl, Path=Position.Y}" RenderTransformOrigin="0.5 0.5" />
 </Canvas>

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Media;
 using Train2d.Main.Commands;
 using Train2d.Main.ViewModel.Items;
 using Train2d.Model;
@@ -17,6 +18,7 @@ namespace Train2d.Main.ViewModel
     private bool _editSignals;
     private Coordinate _mouseCoordinate;
     private bool _validPosition;
+    private Brush _curserColor;
     private TrackViewModel _previewTrack;
 
     #endregion
@@ -40,6 +42,10 @@ namespace Train2d.Main.ViewModel
 
     private void OnSelectMain()
     {
+      if (!_validPosition)
+      {
+        return;
+      }
       List<CommandBase> commands = new List<CommandBase>();
       if (EditTracks)
       {
@@ -97,17 +103,29 @@ namespace Train2d.Main.ViewModel
       var itemAtCoordinate = _parent.LayoutController.GetLayoutItems(_mouseCoordinate);
       if (EditTracks)
       {
-        _validPosition = !itemAtCoordinate.OfType<TrackViewModel>().Any();
-        UpdatePreviewTrack();
+        _validPosition = !itemAtCoordinate.OfType<TrackViewModel>().Any(x => Equals(x.Orientation, GetSelectedTrackOrientation()));
+        UpdatePreviewTrack(_validPosition);
       }
 
       if (PlaceTrain)
       {
         _validPosition = itemAtCoordinate.OfType<TrackViewModel>().Any();
+        UpdateCurser(_validPosition);
       }
       NotifyPropertyChanged(nameof(ValidPosition));
     }
 
+    private void UpdateCurser(bool valid)
+    {
+      if (valid)
+      {
+        CurserColor = Brushes.Gray;
+      }
+      else
+      {
+        CurserColor = Brushes.Red;
+      }
+    }
 
     #endregion
 
@@ -118,13 +136,26 @@ namespace Train2d.Main.ViewModel
       { }
     }
 
+    public Brush CurserColor
+    {
+      get => _curserColor;
+      private set
+      {
+        _curserColor = value;
+        NotifyPropertyChanged(nameof(CurserColor));
+      }
+    }
+
     #region Placement Tracks
 
-    private void UpdatePreviewTrack()
+    private void UpdatePreviewTrack(bool valid)
     {
+      UpdateCurser(valid);
       _previewTrack.SetCoordinate(_mouseCoordinate);
       _previewTrack.SetOrientation(GetSelectedTrackOrientation());
     }
+
+
 
     private TrackOrientation GetSelectedTrackOrientation()
     {
@@ -161,7 +192,7 @@ namespace Train2d.Main.ViewModel
         _editTracks = value;
         if (_editTracks)
         {
-          _parent.LayoutController.Items.Add(_previewTrack);
+          _parent.LayoutController.InsertItemTypeSorted(_previewTrack);
         }
         NotifyPropertyChanged(nameof(EditTracks));
       }

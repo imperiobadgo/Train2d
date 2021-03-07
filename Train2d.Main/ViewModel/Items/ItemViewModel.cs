@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Media;
 using Train2d.Model;
 using Train2d.Model.Converter;
 using Train2d.Model.Items;
@@ -11,13 +12,14 @@ namespace Train2d.Main.ViewModel.Items
     #region Attributes
 
     private Item _item;
+    private Brush _mainColor;
 
     #endregion
 
     #region Construct
 
     protected ItemViewModel()
-    { }
+    {}
 
     protected void SetItem(Item item) => _item = item;
 
@@ -57,6 +59,23 @@ namespace Train2d.Main.ViewModel.Items
       }
       private set { }
     }
+
+    /// <summary>
+    /// Larger values means rendered on top
+    /// </summary>
+    public int DisplayOrder { get; protected set; } = 0;
+
+    public Brush MainColor
+    {
+      get => _mainColor;
+      protected set
+      {
+        _mainColor = value;
+        DisplayedColor = value;
+      }
+    }
+
+    public Brush DisplayedColor { get; protected set; }
 
     #endregion
 

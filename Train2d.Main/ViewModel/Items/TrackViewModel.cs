@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Media;
 using Train2d.Model;
 using Train2d.Model.Items;
 
@@ -8,14 +9,14 @@ namespace Train2d.Main.ViewModel.Items
   {
     #region Construct
 
-    public TrackViewModel()
-    {
-      SetItem(new Track());
-    }
+    public TrackViewModel() : this(new Track())
+    {}
 
     public TrackViewModel(Track newTrack)
     {
       SetItem(newTrack);
+      DisplayOrder = 1;
+      MainColor = Brushes.Aqua;
     }
 
     #endregion

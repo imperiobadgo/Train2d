@@ -55,7 +55,7 @@
         <Grid Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center" LayoutTransform="{StaticResource ResourceKey=Viewer2DSketchScale}">
           <layout:LayoutCoordinates ScaleFactor="{Binding Path=SelectedView.Settings.ScaleFactor, Mode=OneWay, Converter={StaticResource ResourceKey=ScaleInverseConverter}, ConverterParameter={StaticResource Viewer2DScaleFactor}}" />
           <layout:PositionIndicator ScaleFactor="{Binding Path=SelectedView.Settings.ScaleFactor, Mode=OneWay, Converter={StaticResource ResourceKey=ScaleInverseConverter}, ConverterParameter={StaticResource Viewer2DScaleFactor}}" 
-                                    Position="{Binding Path=SelectedView.Settings.MouseCoordinatePosition, Mode=OneWay}"/>
+                                    Position="{Binding Path=SelectedView.Settings.MouseCoordinatePosition, Mode=OneWay}" Color="{Binding Path=SelectedView.EditorController.CurserColor}"/>
           <ItemsControl
           ItemsSource="{Binding Path=SelectedView.LayoutController.Items}">
             <ItemsControl.ItemsPanel>
@@ -76,7 +76,7 @@
             </ItemsControl.ItemContainerStyle>
             <ItemsControl.Resources>
               <DataTemplate DataType="{x:Type items:TrackViewModel}">
-                <Rectangle Width="{x:Static model:Coordinate.CELLSIZE}" Height="4" Fill="Aqua" Stroke="Black">
+                <Rectangle Width="{x:Static model:Coordinate.CELLSIZE}" Height="4" Fill="{Binding DisplayedColor, Mode=OneWay}" Stroke="Black">
                   <Rectangle.RenderTransform>
                     <TransformGroup>
                       <ScaleTransform ScaleX="{Binding XScale}"/>
@@ -89,7 +89,7 @@
               </DataTemplate>
 
               <DataTemplate DataType="{x:Type items:TrainViewModel}">
-                <Ellipse Width="7" Height="7" Fill="DarkBlue">
+                <Ellipse Width="7" Height="7" Fill="{Binding DisplayedColor, Mode=OneWay}">
                   <Ellipse.RenderTransform>
                     <TransformGroup>
                       <TranslateTransform X="-3.5" Y="-3.5"/>
@@ -100,7 +100,7 @@
               </DataTemplate>
 
               <DataTemplate DataType="{x:Type items:SignalViewModel}">
-                <Rectangle Width="10" Height="10" Fill="Green">
+                <Rectangle Width="10" Height="10" Fill="{Binding DisplayedColor, Mode=OneWay}">
                   <Rectangle.RenderTransform>
                     <TransformGroup>
                       <TranslateTransform X="-5" Y="-5"/>

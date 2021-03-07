@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using Train2d.Model.Items;
 
 namespace Train2d.Main.ViewModel.Items
@@ -11,14 +12,14 @@ namespace Train2d.Main.ViewModel.Items
   {
     #region Construct
 
-    public SignalViewModel()
-    {
-      SetItem(new Signal());
-    }
+    public SignalViewModel() : this(new Signal())
+    {}
 
     public SignalViewModel(Signal newSignal)
     {
       SetItem(newSignal);
+      DisplayOrder = 3;
+      MainColor = Brushes.Green;
     }
 
     #endregion

@@ -140,8 +140,23 @@ namespace Train2d.Main
       Guid newGuid = Guid.NewGuid();
       _content.Add(newGuid, newItem);
       newItem.SetGuid(newGuid);
-      Items.Add(newItem);
+      InsertItemTypeSorted(newItem);
       return true;
+    }
+
+    public void InsertItemTypeSorted(ItemViewModel newItem)
+    {
+      ItemViewModel lastItemWithSameDisplayOrder = Items.OrderBy(x => x.DisplayOrder).LastOrDefault(x => x.DisplayOrder <= newItem.DisplayOrder);
+      if (lastItemWithSameDisplayOrder == null)
+      {
+        Items.Add(newItem);
+      }
+      else
+      {
+        int index = Items.IndexOf(lastItemWithSameDisplayOrder);
+        Items.Insert(index + 1, newItem);
+      }
+
     }
 
     /// <summary>
