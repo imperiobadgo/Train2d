@@ -10,5 +10,7 @@ namespace Train2d.Model.Items
   {
 
     public TrackOrientation Orientation { get; set; }
+
+    public Guid ItemOnTrack { get; set; }
   }
 }

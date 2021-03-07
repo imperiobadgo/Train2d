@@ -43,6 +43,7 @@ namespace Train2d.Main.Controls
 
     private void OnContentMouseButtonDown(object sender, MouseButtonEventArgs e)
     {
+
       if (e.ChangedButton == UserSettings.SelectMain)
         Settings.ExecuteSelectMain();
       if (e.ChangedButton == UserSettings.SelectSub)
@@ -64,6 +65,7 @@ namespace Train2d.Main.Controls
         // ZoomContent.CaptureMouse()
         _allowTranslate = true;
       }
+
     }
 
     private void OnContentMouseButtonUp(object sender, MouseButtonEventArgs e)
@@ -155,7 +157,7 @@ namespace Train2d.Main.Controls
       posRelativeToCenter.Y = -posRelativeToCenter.Y;
       posRelativeToCenter /= (double)settings.ScaleFactor;
       return new Point(posRelativeToCenter.X, posRelativeToCenter.Y);
-    }    
+    }
 
     private void OnContentMouseWheel(object sender, MouseWheelEventArgs e)
     {

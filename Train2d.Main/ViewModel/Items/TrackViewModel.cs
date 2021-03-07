@@ -1,12 +1,20 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Media;
 using Train2d.Model;
 using Train2d.Model.Items;
 
 namespace Train2d.Main.ViewModel.Items
 {
+  [DebuggerDisplay("Track {Orientation} x={Coordinate.Value.X} y={Coordinate.Value.Y} ")]
   public class TrackViewModel : ItemGenericViewModel<Track>
   {
+    #region Attributes
+
+    private Coordinate? _endCoordinate;
+
+    #endregion
+
     #region Construct
 
     public TrackViewModel() : this(new Track())
@@ -28,6 +36,46 @@ namespace Train2d.Main.ViewModel.Items
       Orientation = newOrientation;
       NotifyPropertyChanged(nameof(Angle));
       NotifyPropertyChanged(nameof(XScale));
+    }
+
+    public bool ContainsCoordinate(Coordinate testCoordinate)
+    {
+      if (!Coordinate.HasValue || !EndCoordinate.HasValue)
+      {
+        return false;
+      }
+      return Coordinate.Value.Equals(testCoordinate) || EndCoordinate.Value.Equals(testCoordinate);
+    }
+
+    private void UpdateEndCoordinate()
+    {
+      if (!Coordinate.HasValue)
+      {
+        _endCoordinate = null;
+        return;
+      }
+      int offsetX = 0, offsetY = 0;
+      switch (Orientation)
+      {
+        case TrackOrientation.Horizontal:
+          offsetX = 1;
+          break;
+        case TrackOrientation.Vertical:
+          offsetY = 1;
+          break;
+        case TrackOrientation.Diagonal:
+          offsetX = 1;
+          offsetY = 1;
+          break;
+        case TrackOrientation.AntiDiagonal:
+          offsetX = -1;
+          offsetY = 1;
+          break;
+        default:
+          break;
+      }
+      _endCoordinate = new Coordinate(Coordinate.Value.X + offsetX, Coordinate.Value.Y + offsetY);
+      NotifyPropertyChanged(nameof(EndCoordinate));
     }
 
     public List<TrackOrientation> GetAdjacentTrackOrientations()
@@ -65,12 +113,19 @@ namespace Train2d.Main.ViewModel.Items
 
     #region Properties
 
+    public Coordinate? EndCoordinate
+    {
+      get => _endCoordinate;
+      private set { }
+    }
+
     public TrackOrientation Orientation
     {
       get => Item().Orientation;
       private set
       {
         Item().Orientation = value;
+        UpdateEndCoordinate();
         NotifyPropertyChanged(nameof(Orientation));
       }
     }
@@ -86,9 +141,9 @@ namespace Train2d.Main.ViewModel.Items
           case TrackOrientation.Vertical:
             return 90;
           case TrackOrientation.Diagonal:
-            return 135;
-          case TrackOrientation.AntiDiagonal:
             return 45;
+          case TrackOrientation.AntiDiagonal:
+            return 135;
           default:
             return 0;
         }

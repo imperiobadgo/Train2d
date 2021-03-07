@@ -88,6 +88,17 @@
                 </Rectangle>
               </DataTemplate>
 
+              <DataTemplate DataType="{x:Type items:TrackSwitchViewModel}">
+                <Rectangle Width="14" Height="14" Fill="{Binding DisplayedColor, Mode=OneWay}" Stroke="Black">
+                  <Rectangle.RenderTransform>
+                    <TransformGroup>
+                      <TranslateTransform X="-7" Y="-7"/>
+                      <TranslateTransform X="{x:Static model:Coordinate.HALFCELLSIZE}" Y="{x:Static model:Coordinate.HALFCELLSIZE}"/>
+                    </TransformGroup>
+                  </Rectangle.RenderTransform>
+                </Rectangle>
+              </DataTemplate>
+
               <DataTemplate DataType="{x:Type items:TrainViewModel}">
                 <Ellipse Width="7" Height="7" Fill="{Binding DisplayedColor, Mode=OneWay}">
                   <Ellipse.RenderTransform>

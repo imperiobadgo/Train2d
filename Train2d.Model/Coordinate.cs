@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Train2d.Model
 {
+  [DebuggerDisplay("x={X} y={Y}")]
   public struct Coordinate
   {
     public const double CELLSIZE = 20;

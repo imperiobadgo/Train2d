@@ -181,9 +181,13 @@ namespace Train2d.Main
     /// <summary>
     /// Tries to return the corresponding LayoutItem
     /// </summary>
-    public ItemViewModel GetLayoutItemFromId(Guid id)
+    public ItemViewModel GetLayoutItemFromId(Guid? id)
     {
-      if (_content.TryGetValue(id, out ItemViewModel item))
+      if (!id.HasValue)
+      {
+        return null;
+      }
+      if (_content.TryGetValue(id.Value, out ItemViewModel item))
       {
         return item;
       }

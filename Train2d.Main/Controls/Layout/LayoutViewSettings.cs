@@ -20,6 +20,8 @@ namespace Train2d.Main.Controls
     private Action _onMouseMoveAction;
     private Action _onMouseCoordinateChangedAction;
     private Coordinate _mouseCoordinate;
+    private object _selectMainLockObject = new object();
+    private object _selectSubLockObject = new object();
 
     #endregion
 
@@ -87,13 +89,37 @@ namespace Train2d.Main.Controls
       Translate.Y = offset.Y;
     }
 
-    public void ExecuteSelectMain() => _onSelectMainAction?.Invoke();
+    public void ExecuteSelectMain()
+    {
+      lock (_selectMainLockObject)
+      {
+        _onSelectMainAction?.Invoke();
+      }
+    }
 
-    public void ExecuteDeselectMain() => _onDeselectMainAction?.Invoke();
+    public void ExecuteDeselectMain()
+    {
+      lock (_selectMainLockObject)
+      {
+        _onDeselectMainAction?.Invoke();
+      }
+    }
 
-    public void ExecuteSelectSub() => _onSelectSubAction?.Invoke();
+    public void ExecuteSelectSub()
+    {
+      lock (_selectSubLockObject)
+      {
+        _onSelectSubAction?.Invoke();
+      }
+    }
 
-    public void ExecuteDeselectSub() => _onDeselectSubAction?.Invoke();
+    public void ExecuteDeselectSub()
+    {
+      lock (_selectSubLockObject)
+      {
+        _onDeselectSubAction?.Invoke();
+      }
+    }
 
     public void ExecuteMouseMove() => _onMouseMoveAction?.Invoke();
 
@@ -138,7 +164,7 @@ namespace Train2d.Main.Controls
 
     public Coordinate MouseCoordinate
     {
-      get => _mouseCoordinate; 
+      get => _mouseCoordinate;
       set
       {
         _mouseCoordinate = value;
