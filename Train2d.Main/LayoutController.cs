@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Train2d.Main.ViewModel;
 using Train2d.Main.ViewModel.Items;
 using Train2d.Model;
 using Train2d.Model.Items;
@@ -14,7 +15,7 @@ namespace Train2d.Main
 
     private readonly Dictionary<Guid, ItemViewModel> _content;
     private readonly Dictionary<Coordinate, List<Guid>> _layout;
-
+    private readonly List<IUpdateableItem> _updateableItems;
     #endregion
 
     #region Construct
@@ -23,6 +24,7 @@ namespace Train2d.Main
     {
       _content = new Dictionary<Guid, ItemViewModel>();
       _layout = new Dictionary<Coordinate, List<Guid>>();
+      _updateableItems = new List<IUpdateableItem>();
       Items = new ObservableCollection<ItemViewModel>();
     }
 
@@ -49,6 +51,18 @@ namespace Train2d.Main
 
     #endregion
 
+    #region Methods - Update
+
+    public void Update(LayoutViewModel layout, float deltaTime)
+    {
+      foreach (var item in _updateableItems)
+      {
+        item.Update(layout, deltaTime);
+      }
+    }
+
+    #endregion
+
     #region Methods - Layout
 
     /// <summary>
@@ -69,12 +83,19 @@ namespace Train2d.Main
           return false;
         }
         itemsAtPosition.Add(newItem.Id.Value);
-        newItem.SetCoordinate(position);
       }
       else
       {
         _layout.Add(position, new List<Guid>(new Guid[] { newItem.Id.Value }));
-        newItem.SetCoordinate(position);
+      }
+      newItem.SetCoordinate(position);
+      if (newItem is IUpdateableItem updateableItem)
+      {
+        if (!_updateableItems.Contains(updateableItem))
+        {
+          _updateableItems.Add(updateableItem);
+        }
+
       }
       return true;
     }
@@ -96,6 +117,10 @@ namespace Train2d.Main
         {
           itemsAtPosition.Remove(itemToRemove.Id.Value);
           itemToRemove.SetCoordinate(null);
+          if (itemToRemove is IUpdateableItem updateableItem)
+          {
+            _updateableItems.Remove(updateableItem);
+          }
           return true;
         }
       }
@@ -120,6 +145,56 @@ namespace Train2d.Main
           }
         }
       }
+      return result;
+    }
+
+    public List<TrackViewModel> GetAdjacentTracksOnPosition(Coordinate position)
+    {
+      List<TrackViewModel> result = new List<TrackViewModel>();
+
+      if (_layout.TryGetValue(position, out List<Guid> itemsAtPosition))
+      {
+        foreach (var id in itemsAtPosition)
+        {
+          ItemViewModel item = GetLayoutItemFromId(id);
+          if (item is TrackSwitchViewModel switchTrack)
+          {
+            result.AddRange(switchTrack.GetTracks(this));
+            return result;
+          }
+          if (item is TrackViewModel track)
+          {
+            result.Add(track);
+          }
+        }
+      }
+
+
+      for (int x = position.X - 1; x <= position.X + 1; x++)
+      {
+        for (int y = position.Y - 1; y <= position.Y + 1; y++)
+        {
+          Coordinate checkCoordinate = new Coordinate(x, y);
+          if (_layout.TryGetValue(checkCoordinate, out List<Guid> itemsAtCheckPosition))
+          {
+            foreach (var id in itemsAtCheckPosition)
+            {
+              ItemViewModel item = GetLayoutItemFromId(id);
+              if (item is TrackViewModel track)
+              {
+                if (track.ContainsCoordinate(position))
+                {
+                  if (!result.Contains(track))
+                  {
+                    result.Add(track);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
       return result;
     }
 
@@ -215,6 +290,10 @@ namespace Train2d.Main
       {
         ItemViewModel newItem = GetItemViewModel(x);
         _content.Add(newItem.Id.Value, newItem);
+        if (newItem is IUpdateableItem updateableItem && newItem.Coordinate.HasValue)
+        {
+          _updateableItems.Add(updateableItem);
+        }
         Items.Add(newItem);
       });
       layout.LayoutItems.ForEach(x => _layout.Add(x.Position, x.ItemIds));

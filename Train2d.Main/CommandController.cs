@@ -11,6 +11,7 @@ namespace Train2d.Main
 
     private readonly List<CommandBase> _commands;
     private readonly List<CommandBase> _redoCommands;
+    private readonly List<CommandBase> _newCommands;
     #endregion
 
     #region Construct
@@ -19,6 +20,7 @@ namespace Train2d.Main
     {
       _commands = new List<CommandBase>();
       _redoCommands = new List<CommandBase>();
+      _newCommands = new List<CommandBase>();
       UndoCommand = new DelegateCommand(UndoCommandExecute);
       RedoCommand = new DelegateCommand(RedoCommandExecute);
     }
@@ -30,12 +32,22 @@ namespace Train2d.Main
     public void AddCommandAndExecute(CommandBase newCommand)
     {
       AddCommand(newCommand);
-      newCommand.ExecuteAction();
+      ExecuteNewCommands();
     }
 
     public void AddCommand(CommandBase newCommand)
     {
-      _commands.Add(newCommand);
+      _newCommands.Add(newCommand);
+    }
+
+    public void ExecuteNewCommands()
+    {
+      foreach (CommandBase newCommand in _newCommands)
+      {
+        newCommand.ExecuteAction();
+        _commands.Add(newCommand);
+      }
+      _newCommands.Clear();
     }
 
     #endregion

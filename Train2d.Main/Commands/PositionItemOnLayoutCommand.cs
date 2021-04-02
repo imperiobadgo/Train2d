@@ -4,11 +4,11 @@ using Train2d.Model;
 
 namespace Train2d.Main.Commands
 {
-  class PositionItemCommand : CommandItemBase<ItemViewModel>
+  class PositionItemOnLayoutCommand : CommandItemBase<ItemViewModel>
   {
     private Coordinate _coordinate;
 
-    public PositionItemCommand(LayoutViewModel viewModel, ItemViewModel item, Coordinate coordinate) : base(viewModel, item)
+    public PositionItemOnLayoutCommand(LayoutViewModel viewModel, ItemViewModel item, Coordinate coordinate) : base(viewModel, item)
     {
       _coordinate = coordinate;
     }

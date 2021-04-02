@@ -44,6 +44,7 @@
         <MenuItem Header="Open" Command="{Binding LoadLayoutCommand}"/>
         <MenuItem Header="Save" Command="{Binding SaveLayoutCommand}"/>
       </MenuItem>
+      <MenuItem Header="Pause" IsCheckable="True" IsChecked="{Binding Path=SelectedView.Pause}"/>
     </Menu>
 
     <StackPanel Grid.Row="1" Grid.Column="0">

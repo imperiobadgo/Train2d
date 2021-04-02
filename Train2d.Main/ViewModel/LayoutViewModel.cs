@@ -30,19 +30,9 @@ namespace Train2d.Main.ViewModel
       LayoutController = new LayoutController();
       Settings = new LayoutViewSettings { ShowSettings = true, ScaleToPosition = true };
       EditorController = new EditorViewModel(this);
-      
+
 
       InitializeCommands();
-
-      //rand = new Random();
-      //Positions = new List<Position>();
-      //int width = 100;
-      //int height = 100;
-      //for (int i = 0; i < 1000; i++)
-      //{
-      //  Positions.Add(new Position(rand.NextDouble() * width, rand.NextDouble() * height));
-      //}
-      //TestPosition = Positions[0];
 
       _time1 = DateTime.UtcNow;
       _time2 = DateTime.UtcNow;
@@ -71,6 +61,12 @@ namespace Train2d.Main.ViewModel
     {
       _time2 = DateTime.UtcNow;
       float deltaTime = (_time2.Ticks - _time1.Ticks) / 10000000f;
+      if (!Pause)
+      {
+        LayoutController.Update(this, deltaTime);
+        GetCommandController().ExecuteNewCommands();
+        //Console.WriteLine($"Updated deltaTime: {deltaTime}");
+      }
       //Console.WriteLine(deltaTime);  // *float* output {0,2493331}
       //Console.WriteLine(time2.Ticks - time1.Ticks); // *int* output {2493331}
       //for (int i = 0; i < Positions.Count; i++)
@@ -123,17 +119,14 @@ namespace Train2d.Main.ViewModel
 
     #region Properties
 
-    public Position TestPosition { get; set; }
-
-    public List<Position> Positions { get; set; }
-
     public LayoutViewSettings Settings { get; set; }
 
     public EditorViewModel EditorController { get; private set; }
 
     public LayoutController LayoutController { get; private set; }
 
-    
+
+    public bool Pause { get; set; } = true;
 
     public float FramesPerSecond { get; private set; }
 

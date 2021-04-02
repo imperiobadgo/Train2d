@@ -8,5 +8,11 @@ namespace Train2d.Model.Items
 {
   public class Signal : Item
   {
+
+    /// <summary>
+    /// 0: Hold
+    /// 1: Go
+    /// </summary>
+    public int State { get; set; } = 0;
   }
 }

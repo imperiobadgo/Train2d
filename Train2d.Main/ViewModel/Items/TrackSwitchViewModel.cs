@@ -32,6 +32,30 @@ namespace Train2d.Main.ViewModel.Items
       AdjacentTracks = adjacentTracks;
     }
 
+    public List<TrackViewModel> GetTracks(LayoutController controller)
+    {
+      List<TrackViewModel> tracks = new List<TrackViewModel>();
+      if (Track.HasValue)
+      {
+        ItemViewModel mainTrackItem = controller.GetLayoutItemFromId(Track.Value);
+        if (mainTrackItem is TrackViewModel mainTrack)
+        {
+          tracks.Add(mainTrack);
+        }
+        
+      }
+      if (AdjacentTracks.Count > 0)
+      {
+        ItemViewModel adjacentTrackItem = controller.GetLayoutItemFromId(AdjacentTracks.First());
+        if (adjacentTrackItem is TrackViewModel adjacentTrack)
+        {
+          tracks.Add(adjacentTrack);
+        }
+      }
+
+      return tracks;
+    }
+
     #endregion
 
     #region Properties

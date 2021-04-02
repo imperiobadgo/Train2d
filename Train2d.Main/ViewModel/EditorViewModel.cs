@@ -58,22 +58,46 @@ namespace Train2d.Main.ViewModel
         addedTrack = new TrackViewModel();
         TrackOrientation orientation = GetSelectedTrackOrientation();
         commands.Add(new CreateItemCommand(_parent, addedTrack));
-        commands.Add(new PositionItemCommand(_parent, addedTrack, _mouseCoordinate));
+        commands.Add(new PositionItemOnLayoutCommand(_parent, addedTrack, _mouseCoordinate));
         commands.Add(new OrientateTrackCommand(_parent, addedTrack, orientation));
       }
 
       if (PlaceTrain)
       {
+        var tracksAtCoordinate = _parent.LayoutController.GetLayoutItems(_mouseCoordinate).OfType<TrackViewModel>().FirstOrDefault();
+
         TrainViewModel newTrain = new TrainViewModel();
         commands.Add(new CreateItemCommand(_parent, newTrain));
-        commands.Add(new PositionItemCommand(_parent, newTrain, _mouseCoordinate));
+        commands.Add(new PositionItemOnLayoutCommand(_parent, newTrain, _mouseCoordinate));
+        if (tracksAtCoordinate != null)
+        {
+          int directionToSet = 0;
+          switch (tracksAtCoordinate.Orientation)
+          {
+            case TrackOrientation.Horizontal:
+              directionToSet = 2;
+              break;
+            case TrackOrientation.Vertical:
+              directionToSet = 0;
+              break;
+            case TrackOrientation.Diagonal:
+              directionToSet = 1;
+              break;
+            case TrackOrientation.AntiDiagonal:
+              directionToSet = 7;
+              break;
+            default:
+              break;
+          }
+          commands.Add(new SetTrainDirectionCommand(_parent, newTrain, directionToSet));
+        }
       }
 
       if (EditSignals)
       {
         SignalViewModel newSignal = new SignalViewModel();
         commands.Add(new CreateItemCommand(_parent, newSignal));
-        commands.Add(new PositionItemCommand(_parent, newSignal, _mouseCoordinate));
+        commands.Add(new PositionItemOnLayoutCommand(_parent, newSignal, _mouseCoordinate));
       }
 
       List<CommandBase> switchCommands = new List<CommandBase>();
@@ -174,7 +198,7 @@ namespace Train2d.Main.ViewModel
       List<CommandBase> commands = new List<CommandBase>();
       TrackSwitchViewModel trackSwitch = new TrackSwitchViewModel();
       commands.Add(new CreateItemCommand(_parent, trackSwitch));
-      commands.Add(new PositionItemCommand(_parent, trackSwitch, checkCoordinate));
+      commands.Add(new PositionItemOnLayoutCommand(_parent, trackSwitch, checkCoordinate));
       commands.Add(new ConfigureTrackSwitchCommand(_parent, trackSwitch, checkTrack, trackGuids));
       switchCommands.Add(new CommandChain(commands));
     }

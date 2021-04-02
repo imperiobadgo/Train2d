@@ -98,7 +98,9 @@
     <Compile Include="Commands\CreateItemCommand.cs" />
     <Compile Include="Commands\DeleteItemCommand.cs" />
     <Compile Include="Commands\OrientateTrackCommand.cs" />
-    <Compile Include="Commands\PositionItemCommand.cs" />
+    <Compile Include="Commands\RemoveItemFromLayoutCommand.cs" />
+    <Compile Include="Commands\SetTrainDirectionCommand.cs" />
+    <Compile Include="Commands\PositionItemOnLayoutCommand.cs" />
     <Compile Include="Controls\DelegateCommand.cs" />
     <Compile Include="Controls\Layout\LayoutCoordinates.xaml.cs">
       <DependentUpon>LayoutCoordinates.xaml</DependentUpon>
@@ -118,6 +120,7 @@
     <Compile Include="ViewModel\Items\ItemViewModel.cs" />
     <Compile Include="ViewModel\EditorViewModel.cs" />
     <Compile Include="ViewModel\Items\ItemGenericViewModel.cs" />
+    <Compile Include="ViewModel\Items\IUpdateableItem.cs" />
     <Compile Include="ViewModel\Items\SignalViewModel.cs" />
     <Compile Include="ViewModel\Items\TrackSwitchViewModel.cs" />
     <Compile Include="ViewModel\Items\TrackViewModel.cs" />
