@@ -21,6 +21,7 @@ namespace Train2d.Main.ViewModel
     private bool _validPosition;
     private Brush _curserColor;
     private TrackViewModel _previewTrack;
+    private List<ItemViewModel> _itemsOnMousePosition;
 
     #endregion
 
@@ -50,19 +51,13 @@ namespace Train2d.Main.ViewModel
       TrackViewModel addedTrack = null;
       if (EditTracks)
       {
-        //add previewTrack to the layout for switch updating, so the previewtrack is used for checking, whether a switch should be added
-        //The advantage is that in this way the commands of creating the new track and changing all switches can be executed together.
-        _parent.LayoutController.AddLayoutItem(_previewTrack);
-        _parent.LayoutController.AddItemToLayout(_mouseCoordinate, _previewTrack);
-
         addedTrack = new TrackViewModel();
         TrackOrientation orientation = GetSelectedTrackOrientation();
         commands.Add(new CreateItemCommand(_parent, addedTrack));
         commands.Add(new PositionItemOnLayoutCommand(_parent, addedTrack, _mouseCoordinate));
         commands.Add(new OrientateTrackCommand(_parent, addedTrack, orientation));
       }
-
-      if (PlaceTrain)
+      else if (PlaceTrain)
       {
         var tracksAtCoordinate = _parent.LayoutController.GetLayoutItems(_mouseCoordinate).OfType<TrackViewModel>().FirstOrDefault();
 
@@ -92,30 +87,43 @@ namespace Train2d.Main.ViewModel
           commands.Add(new SetTrainDirectionCommand(_parent, newTrain, directionToSet));
         }
       }
-
-      if (EditSignals)
+      else if (EditSignals)
       {
         SignalViewModel newSignal = new SignalViewModel();
         commands.Add(new CreateItemCommand(_parent, newSignal));
         commands.Add(new PositionItemOnLayoutCommand(_parent, newSignal, _mouseCoordinate));
       }
-
-      List<CommandBase> switchCommands = new List<CommandBase>();
-      UpdateSwitchesOnsurroundingTracks(_mouseCoordinate, switchCommands);
-
-      if (EditTracks)
+      else
       {
-        //dont forget to remove the previewtrack after switch updating
-        _parent.LayoutController.RemoveItemFromLayout(_mouseCoordinate, _previewTrack);
-        _parent.LayoutController.RemoveLayoutItem(_previewTrack);
+
+        foreach (var item in _itemsOnMousePosition)
+        {
+          item.OnSelectMain(_parent.LayoutController);
+        }
       }
 
-      commands.AddRange(switchCommands);
       if (commands.Count > 0)
       {
         CommandChain commandChain = new CommandChain(commands);
         _parent.GetCommandController().AddCommandAndExecute(commandChain);
+
+        if (EditTracks)
+        {
+          List<CommandBase> switchCommands = new List<CommandBase>();
+          UpdateSwitchesOnsurroundingTracks(_mouseCoordinate, switchCommands);
+          foreach (CommandBase switchCommand in switchCommands)
+          {
+            switchCommand.ExecuteAction();
+            //Add to already executed commandchain, to be part of one undo action
+            commandChain.Add(switchCommand);
+          }
+        }
       }
+
+
+
+
+
 
       UpdateValidPosition();
     }
@@ -158,6 +166,11 @@ namespace Train2d.Main.ViewModel
       List<TrackViewModel> adjacentTracksB = new List<TrackViewModel>();
       int addedX = checkTrack.Coordinate.Value.X;
       int addedY = checkTrack.Coordinate.Value.Y;
+      
+      
+      
+      //TODO:
+      //coordinaten in a und b suchen (jeweils 3) und die gefundenen Schienen mit diesen Koordinaten abgleichen
       for (int x = addedX - 1; x <= addedX + 1; x++)
       {
         for (int y = addedY - 1; y <= addedY + 1; y++)
@@ -171,10 +184,12 @@ namespace Train2d.Main.ViewModel
           {
             if (track.ContainsCoordinate(checkTrack.Coordinate.Value))
             {
+              //hier muss die andere Koordinate mit der a coordinateliste von oben passen
               adjacentTracksA.Add(track);
             }
             if (track.ContainsCoordinate(checkTrack.EndCoordinate.Value))
             {
+              //hier muss die andere Koordinate mit der b coordinateliste von oben passen
               adjacentTracksB.Add(track);
             }
           }
@@ -197,6 +212,7 @@ namespace Train2d.Main.ViewModel
       List<Guid> trackGuids = adjacentTracks.Select(x => x.Id.Value).ToList();
       List<CommandBase> commands = new List<CommandBase>();
       TrackSwitchViewModel trackSwitch = new TrackSwitchViewModel();
+      trackSwitch.SetController(_parent.LayoutController);
       commands.Add(new CreateItemCommand(_parent, trackSwitch));
       commands.Add(new PositionItemOnLayoutCommand(_parent, trackSwitch, checkCoordinate));
       commands.Add(new ConfigureTrackSwitchCommand(_parent, trackSwitch, checkTrack, trackGuids));
@@ -230,17 +246,20 @@ namespace Train2d.Main.ViewModel
 
     private void UpdateValidPosition()
     {
-      var itemAtCoordinate = _parent.LayoutController.GetLayoutItems(_mouseCoordinate);
+      _itemsOnMousePosition = _parent.LayoutController.GetLayoutItems(_mouseCoordinate);
       if (EditTracks)
       {
-        _validPosition = !itemAtCoordinate.OfType<TrackViewModel>().Any(x => Equals(x.Orientation, GetSelectedTrackOrientation()));
+        _validPosition = !_itemsOnMousePosition.OfType<TrackViewModel>().Any(x => Equals(x.Orientation, GetSelectedTrackOrientation()));
         UpdatePreviewTrack(_validPosition);
       }
-
-      if (PlaceTrain || EditSignals)
+      else if (PlaceTrain || EditSignals)
       {
-        _validPosition = itemAtCoordinate.OfType<TrackViewModel>().Any();
+        _validPosition = _itemsOnMousePosition.OfType<TrackViewModel>().Any();
         UpdateCurser(_validPosition);
+      }
+      else
+      {
+        _validPosition = true;
       }
       NotifyPropertyChanged(nameof(ValidPosition));
     }

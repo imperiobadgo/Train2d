@@ -11,6 +11,11 @@ namespace Train2d.Main.Commands
       _commands = commands;
     }
 
+    public void Add(CommandBase command)
+    {
+      _commands.Add(command);
+    }
+
     protected override bool Execute()
     {
       for (int i = 0; i < _commands.Count; i++)

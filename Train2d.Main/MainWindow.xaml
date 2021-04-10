@@ -90,14 +90,26 @@
               </DataTemplate>
 
               <DataTemplate DataType="{x:Type items:TrackSwitchViewModel}">
-                <Rectangle Width="14" Height="14" Fill="{Binding DisplayedColor, Mode=OneWay}" Stroke="Black">
-                  <Rectangle.RenderTransform>
-                    <TransformGroup>
-                      <TranslateTransform X="-7" Y="-7"/>
-                      <TranslateTransform X="{x:Static model:Coordinate.HALFCELLSIZE}" Y="{x:Static model:Coordinate.HALFCELLSIZE}"/>
-                    </TransformGroup>
-                  </Rectangle.RenderTransform>
-                </Rectangle>
+                <Grid>
+                  <Rectangle Width="14" Height="14" Fill="{Binding DisplayedColor, Mode=OneWay}" Stroke="Black">
+                    <Rectangle.RenderTransform>
+                      <TransformGroup>
+                        <TranslateTransform X="-7" Y="-7"/>
+                        <TranslateTransform X="{x:Static model:Coordinate.HALFCELLSIZE}" Y="{x:Static model:Coordinate.HALFCELLSIZE}"/>
+                      </TransformGroup>
+                    </Rectangle.RenderTransform>
+                  </Rectangle>
+                  <Rectangle  Width="{x:Static model:Coordinate.HALFCELLSIZE}" Height="4" Fill="{Binding DisplayedColor, Mode=OneWay}" Stroke="Black">
+                    <Rectangle.RenderTransform>
+                      <TransformGroup>
+                        <ScaleTransform ScaleX="{Binding SelectedXScale}"/>
+                        <TranslateTransform X="0" Y="-2"/>
+                        <RotateTransform Angle="{Binding SelectedAngle}"/>
+                        <!--<TranslateTransform X="{x:Static model:Coordinate.HALFCELLSIZE}" Y="{x:Static model:Coordinate.HALFCELLSIZE}"/>-->
+                      </TransformGroup>
+                    </Rectangle.RenderTransform>
+                  </Rectangle>
+                </Grid>
               </DataTemplate>
 
               <DataTemplate DataType="{x:Type items:TrainViewModel}">

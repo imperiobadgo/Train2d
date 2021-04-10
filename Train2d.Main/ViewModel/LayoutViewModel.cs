@@ -67,17 +67,6 @@ namespace Train2d.Main.ViewModel
         GetCommandController().ExecuteNewCommands();
         //Console.WriteLine($"Updated deltaTime: {deltaTime}");
       }
-      //Console.WriteLine(deltaTime);  // *float* output {0,2493331}
-      //Console.WriteLine(time2.Ticks - time1.Ticks); // *int* output {2493331}
-      //for (int i = 0; i < Positions.Count; i++)
-      //{
-      //  var p = Positions[i];
-      //  if (rand.Next(20) == 5)
-      //  {
-      //    p.Movement = (new Vector((rand.NextDouble() * 2) - 1, (rand.NextDouble() * 2) - 1))*50;
-      //  }
-      //  p.Update(deltaTime);
-      //}
       numFrames++;
       elapsedSeconds += deltaTime;
       if (elapsedSeconds > secondsToTrigger)
@@ -133,32 +122,4 @@ namespace Train2d.Main.ViewModel
     #endregion
 
   }
-
-  public class Position : INotifyPropertyChanged
-  {
-
-    public event PropertyChangedEventHandler PropertyChanged;
-    protected void NotifyPropertyChanged(string info)
-    {
-      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
-    }
-
-    public Position(double x, double y)
-    {
-      Pos = new Vector(x, y);
-      Movement = new Vector();
-    }
-
-    public void Update(double delta)
-    {
-      Pos += Movement * delta;
-
-      NotifyPropertyChanged(nameof(Pos));
-    }
-
-
-    public Vector Movement { get; set; }
-    public Vector Pos { get; set; }
-  }
-
 }

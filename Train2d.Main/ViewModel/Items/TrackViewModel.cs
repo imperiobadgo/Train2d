@@ -27,6 +27,10 @@ namespace Train2d.Main.ViewModel.Items
       MainColor = Brushes.Aqua;
     }
 
+    protected override void OnItemSet(Item item)
+    {
+      UpdateEndCoordinate();
+    }
     #endregion
 
     #region Methods
@@ -45,6 +49,24 @@ namespace Train2d.Main.ViewModel.Items
         return false;
       }
       return Coordinate.Value.Equals(testCoordinate) || EndCoordinate.Value.Equals(testCoordinate);
+    }
+
+    public Coordinate? GetOtherCoordinate(Coordinate testCoordinate)
+    {
+      if (!Coordinate.HasValue || !EndCoordinate.HasValue)
+      {
+        return null;
+      }
+      
+      if (Coordinate.Value.Equals(testCoordinate))
+      {
+        return EndCoordinate.Value;
+      }
+      else if(EndCoordinate.Value.Equals(testCoordinate))
+      {
+        return Coordinate.Value;
+      }
+      return null;
     }
 
     private void UpdateEndCoordinate()

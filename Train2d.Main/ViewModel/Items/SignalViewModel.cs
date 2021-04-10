@@ -22,6 +22,11 @@ namespace Train2d.Main.ViewModel.Items
       MainColor = Brushes.Green;
     }
 
+    protected override void OnItemSet(Item item)
+    {
+
+    }
+
     #endregion
   }
 }

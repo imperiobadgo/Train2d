@@ -8,8 +8,8 @@ namespace Train2d.Model.Items
 {
   public class TrackSwitch : Item
   {
-    public Guid? Track { get; set; }
+    public Guid? TrackId { get; set; }
 
-    public List<Guid> AdjacentTracks { get; set; } = new List<Guid>();
+    public List<Guid> AdjacentTrackIds { get; set; } = new List<Guid>();
   }
 }

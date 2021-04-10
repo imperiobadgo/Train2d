@@ -15,7 +15,7 @@ namespace Train2d.Main.ViewModel.Items
     #region Attributes
 
     private int _coolDown;
-    private int _resetCoolDown = 20;
+    private int _resetCoolDown = 10;
 
     #endregion
 
@@ -30,6 +30,11 @@ namespace Train2d.Main.ViewModel.Items
       DisplayOrder = 5;
       MainColor = Brushes.DarkBlue;
       _coolDown = _resetCoolDown;
+    }
+
+    protected override void OnItemSet(Item item)
+    {
+
     }
 
     #endregion
@@ -55,7 +60,7 @@ namespace Train2d.Main.ViewModel.Items
         return;
       }
       List<Tuple<TrackViewModel, int, Coordinate>> resultTracks = new List<Tuple<TrackViewModel, int, Coordinate>>();
-      List<Tuple<int, Coordinate>> coordsInDirection = GetCoordinatesInDirection();
+      List<Tuple<int, Coordinate>> coordsInDirection = GetCoordinatesInDirection(Direction);
       foreach (TrackViewModel track in possibleTracks)
       {
         foreach (Tuple<int, Coordinate> coordinate in coordsInDirection)
@@ -80,38 +85,6 @@ namespace Train2d.Main.ViewModel.Items
 
         layout.GetCommandController().AddCommand(chain);
       }
-    }
-
-
-    public List<Tuple<int, Coordinate>> GetCoordinatesInDirection()
-    {
-      List<Tuple<int, Coordinate>> coordinates = new List<Tuple<int, Coordinate>>();
-      List<int> possibleDirections = new List<int>();
-      for (int i = Direction - 1; i < Direction + 2; i++)
-      {
-        if (i < 0)
-        {
-          possibleDirections.Add(i + Train.DirectionRange);
-        }
-        else if (i > Train.DirectionRange - 1)
-        {
-          possibleDirections.Add(i - Train.DirectionRange);
-        }
-        else
-        {
-          possibleDirections.Add(i);
-        }
-      }
-      foreach (int dir in possibleDirections)
-      {
-        Coordinate? possibleCoord = Item().GetCoordinateInDirection(dir);
-        if (possibleCoord.HasValue)
-        {
-          coordinates.Add(Tuple.Create(dir, possibleCoord.Value));
-        }
-      }
-
-      return coordinates;
     }
 
     #endregion

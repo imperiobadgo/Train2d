@@ -2,7 +2,7 @@
 
 namespace Train2d.Main.ViewModel.Items
 {
-  public class ItemGenericViewModel<T> : ItemViewModel where T : Item
+  public abstract class ItemGenericViewModel<T> : ItemViewModel where T : Item
   {
 
     public T Item() => (T)BaseItem();

@@ -34,8 +34,6 @@ namespace Train2d.Main.Controls
     private void InitializeMouseHandler()
     {
       UserControl.MouseWheel += OnContentMouseWheel;
-      ZoomContent.MouseDown += OnContentMouseButtonDown;
-      ZoomContent.MouseUp += OnContentMouseButtonUp;
       UserControl.MouseMove += OnContentMouseMove;
       UserControl.MouseDown += OnContentMouseButtonDown;
       UserControl.MouseUp += OnContentMouseButtonUp;

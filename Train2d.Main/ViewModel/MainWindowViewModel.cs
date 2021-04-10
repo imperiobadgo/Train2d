@@ -56,12 +56,19 @@ namespace Train2d.Main.ViewModel
       if (sfd.ShowDialog() == true)
       {
         var serializer = Serialization.SerializerContainer.GetExtendedSerializer();
-        FileStream stream = new FileStream(sfd.FileName, FileMode.OpenOrCreate);
-        using (XmlWriter writer = XmlWriter.Create(stream))
+        try
         {
-          Layout layoutToSave = SelectedView.LayoutController.GetLayout();
-          serializer.Serialize(writer, layoutToSave);
-          writer.Flush();
+          FileStream stream = new FileStream(sfd.FileName, FileMode.OpenOrCreate);
+          using (XmlWriter writer = XmlWriter.Create(stream))
+          {
+            Layout layoutToSave = SelectedView.LayoutController.GetLayout();
+            serializer.Serialize(writer, layoutToSave);
+            writer.Flush();
+          }
+        }
+        catch (Exception ex)
+        {
+
         }
       }
     }
@@ -91,7 +98,7 @@ namespace Train2d.Main.ViewModel
             SelectedView.LayoutController.SetLayout(loadedLayout);
           }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
 
         }

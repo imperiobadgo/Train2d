@@ -121,6 +121,11 @@ namespace Train2d.Main
           {
             _updateableItems.Remove(updateableItem);
           }
+          if (itemsAtPosition.Count == 0)
+          {
+            //Remove not needed empty layout position
+            _layout.Remove(position);
+          }
           return true;
         }
       }
@@ -231,7 +236,6 @@ namespace Train2d.Main
         int index = Items.IndexOf(lastItemWithSameDisplayOrder);
         Items.Insert(index + 1, newItem);
       }
-
     }
 
     /// <summary>
@@ -285,7 +289,8 @@ namespace Train2d.Main
     {
       _layout.Clear();
       _content.Clear();
-      Items.Clear();
+      _updateableItems.Clear();
+      Items.Clear();      
       layout.ContentItems.ForEach(x =>
       {
         ItemViewModel newItem = GetItemViewModel(x);
@@ -293,6 +298,10 @@ namespace Train2d.Main
         if (newItem is IUpdateableItem updateableItem && newItem.Coordinate.HasValue)
         {
           _updateableItems.Add(updateableItem);
+        }
+        if (newItem is TrackSwitchViewModel trackSwitch)
+        {
+          trackSwitch.SetController(this);
         }
         Items.Add(newItem);
       });
