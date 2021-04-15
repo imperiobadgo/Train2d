@@ -131,6 +131,62 @@ namespace Train2d.Main.ViewModel.Items
       return orientations;
     }
 
+    /// <summary>
+    /// 7  0  1
+    /// 6     2
+    /// 5  4  3
+    /// </summary>
+    public int GetDirectionInA()
+    {
+      int directionA = 0;
+      switch (Orientation)
+      {
+        case TrackOrientation.Horizontal:
+          directionA = 6;
+          break;
+        case TrackOrientation.Vertical:
+          directionA = 0;
+          break;
+        case TrackOrientation.Diagonal:
+          directionA = 5;
+          break;
+        case TrackOrientation.AntiDiagonal:
+          directionA = 7;
+          break;
+        default:
+          break;
+      }
+      return directionA;
+    }
+
+    /// <summary>
+    /// 7  0  1
+    /// 6     2
+    /// 5  4  3
+    /// </summary>
+    public int GetDirectionInB()
+    {
+      int directionB = 0;
+      switch (Orientation)
+      {
+        case TrackOrientation.Horizontal:
+          directionB = 2;
+          break;
+        case TrackOrientation.Vertical:
+          directionB = 4;
+          break;
+        case TrackOrientation.Diagonal:
+          directionB = 1;
+          break;
+        case TrackOrientation.AntiDiagonal:
+          directionB = 3;
+          break;
+        default:
+          break;
+      }
+      return directionB;
+    }
+
     #endregion
 
     #region Properties

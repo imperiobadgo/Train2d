@@ -47,12 +47,12 @@ namespace Train2d.Main.ViewModel.Items
       NotifyPropertyChanged(nameof(Position));
     }
 
-    public virtual void OnSelectMain(LayoutController layoutController)
+    public virtual void OnSelectMain(LayoutController layoutController, LayoutViewModel layout)
     {
 
     }
 
-    public List<Tuple<int, Coordinate>> GetCoordinatesInDirection(int direction)
+    public static List<Tuple<int, Coordinate>> GetCoordinatesInDirection(Coordinate? coordinate, int direction)
     {
       List<Tuple<int, Coordinate>> coordinates = new List<Tuple<int, Coordinate>>();
       List<int> possibleDirections = new List<int>();
@@ -73,7 +73,7 @@ namespace Train2d.Main.ViewModel.Items
       }
       foreach (int dir in possibleDirections)
       {
-        Coordinate? possibleCoord = _item.GetCoordinateInDirection(dir);
+        Coordinate? possibleCoord = Item.GetCoordinateInDirection(coordinate, dir);
         if (possibleCoord.HasValue)
         {
           coordinates.Add(Tuple.Create(dir, possibleCoord.Value));

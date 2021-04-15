@@ -10,15 +10,15 @@ namespace Train2d.Main.Commands
 {
   public class ConfigureTrackSwitchCommand : CommandItemBase<TrackSwitchViewModel>
   {
-    private TrackViewModel _oldTrack;
-    private TrackViewModel _newTrack;
+    private Guid? _oldTrack;
+    private Guid? _newTrack;
     private List<Guid> _oldAdjacentTracks;
     private List<Guid> _newAdjacentTracks;
 
-    public ConfigureTrackSwitchCommand(LayoutViewModel viewModel, TrackSwitchViewModel trackSwitch, TrackViewModel track, List<Guid> adjacentTracks) : base(viewModel, trackSwitch)
+    public ConfigureTrackSwitchCommand(LayoutViewModel viewModel, TrackSwitchViewModel trackSwitch, Guid? trackId, List<Guid> adjacentTracks) : base(viewModel, trackSwitch)
     {
-      _oldTrack = viewModel.LayoutController.GetLayoutItemFromId(trackSwitch.TrackId) as TrackViewModel; // as equals TryCast in vb
-      _newTrack = track;
+      _oldTrack = trackSwitch.TrackId;
+      _newTrack = trackId;
       _oldAdjacentTracks = trackSwitch.AdjacentTrackIds;
       _newAdjacentTracks = adjacentTracks;
     }

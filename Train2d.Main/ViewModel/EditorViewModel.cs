@@ -53,7 +53,7 @@ namespace Train2d.Main.ViewModel
       {
         addedTrack = new TrackViewModel();
         TrackOrientation orientation = GetSelectedTrackOrientation();
-        commands.Add(new CreateItemCommand(_parent, addedTrack));
+        commands.Add(new CreateItemCommand(_parent, addedTrack, Guid.NewGuid()));
         commands.Add(new PositionItemOnLayoutCommand(_parent, addedTrack, _mouseCoordinate));
         commands.Add(new OrientateTrackCommand(_parent, addedTrack, orientation));
       }
@@ -62,7 +62,7 @@ namespace Train2d.Main.ViewModel
         var tracksAtCoordinate = _parent.LayoutController.GetLayoutItems(_mouseCoordinate).OfType<TrackViewModel>().FirstOrDefault();
 
         TrainViewModel newTrain = new TrainViewModel();
-        commands.Add(new CreateItemCommand(_parent, newTrain));
+        commands.Add(new CreateItemCommand(_parent, newTrain, Guid.NewGuid()));
         commands.Add(new PositionItemOnLayoutCommand(_parent, newTrain, _mouseCoordinate));
         if (tracksAtCoordinate != null)
         {
@@ -90,7 +90,7 @@ namespace Train2d.Main.ViewModel
       else if (EditSignals)
       {
         SignalViewModel newSignal = new SignalViewModel();
-        commands.Add(new CreateItemCommand(_parent, newSignal));
+        commands.Add(new CreateItemCommand(_parent, newSignal, Guid.NewGuid()));
         commands.Add(new PositionItemOnLayoutCommand(_parent, newSignal, _mouseCoordinate));
       }
       else
@@ -98,8 +98,9 @@ namespace Train2d.Main.ViewModel
 
         foreach (var item in _itemsOnMousePosition)
         {
-          item.OnSelectMain(_parent.LayoutController);
+          item.OnSelectMain(_parent.LayoutController, _parent);
         }
+        _parent.GetCommandController().ExecuteNewCommands();
       }
 
       if (commands.Count > 0)
@@ -179,18 +180,26 @@ namespace Train2d.Main.ViewModel
           {
             continue;
           }
+          var coordinatesInA = ItemViewModel.GetCoordinatesInDirection(checkTrack.EndCoordinate.Value, checkTrack.GetDirectionInA());
+          var coordinatesInB = ItemViewModel.GetCoordinatesInDirection(checkTrack.Coordinate.Value, checkTrack.GetDirectionInB());
           IEnumerable<TrackViewModel> tracks = _parent.LayoutController.GetLayoutItems(new Coordinate(x, y)).OfType<TrackViewModel>();
           foreach (TrackViewModel track in tracks)
           {
             if (track.ContainsCoordinate(checkTrack.Coordinate.Value))
             {
               //hier muss die andere Koordinate mit der a coordinateliste von oben passen
-              adjacentTracksA.Add(track);
+              if (coordinatesInA.Where(directionCoordinate => track.ContainsCoordinate(directionCoordinate.Item2)).Any())
+              {
+                adjacentTracksA.Add(track);
+              }
             }
             if (track.ContainsCoordinate(checkTrack.EndCoordinate.Value))
             {
               //hier muss die andere Koordinate mit der b coordinateliste von oben passen
-              adjacentTracksB.Add(track);
+              if (coordinatesInB.Where(directionCoordinate => track.ContainsCoordinate(directionCoordinate.Item2)).Any())
+              {
+                adjacentTracksB.Add(track);
+              }
             }
           }
         }
@@ -209,13 +218,18 @@ namespace Train2d.Main.ViewModel
       {
         return;
       }
+      TrackSwitchViewModel alreadyAddedSwitch = _parent.LayoutController.GetLayoutItems(checkCoordinate).OfType<TrackSwitchViewModel>().FirstOrDefault();
+      if (alreadyAddedSwitch != null)
+      {
+        return;
+      }
       List<Guid> trackGuids = adjacentTracks.Select(x => x.Id.Value).ToList();
       List<CommandBase> commands = new List<CommandBase>();
       TrackSwitchViewModel trackSwitch = new TrackSwitchViewModel();
       trackSwitch.SetController(_parent.LayoutController);
-      commands.Add(new CreateItemCommand(_parent, trackSwitch));
+      commands.Add(new CreateItemCommand(_parent, trackSwitch, Guid.NewGuid()));
       commands.Add(new PositionItemOnLayoutCommand(_parent, trackSwitch, checkCoordinate));
-      commands.Add(new ConfigureTrackSwitchCommand(_parent, trackSwitch, checkTrack, trackGuids));
+      commands.Add(new ConfigureTrackSwitchCommand(_parent, trackSwitch, checkTrack.Id, trackGuids));
       switchCommands.Add(new CommandChain(commands));
     }
 

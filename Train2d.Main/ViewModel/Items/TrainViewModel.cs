@@ -60,12 +60,12 @@ namespace Train2d.Main.ViewModel.Items
         return;
       }
       List<Tuple<TrackViewModel, int, Coordinate>> resultTracks = new List<Tuple<TrackViewModel, int, Coordinate>>();
-      List<Tuple<int, Coordinate>> coordsInDirection = GetCoordinatesInDirection(Direction);
+      List<Tuple<int, Coordinate>> coordsInDirection = GetCoordinatesInDirection(Coordinate, Direction);
       foreach (TrackViewModel track in possibleTracks)
       {
         foreach (Tuple<int, Coordinate> coordinate in coordsInDirection)
         {
-          if (track.ContainsCoordinate(coordinate.Item2))
+          if (track.ContainsCoordinate(Coordinate.Value) && track.ContainsCoordinate(coordinate.Item2))
           {
             if (!resultTracks.Any(x => Equals(x.Item1, track)))
             {

@@ -164,8 +164,7 @@ namespace Train2d.Main
           ItemViewModel item = GetLayoutItemFromId(id);
           if (item is TrackSwitchViewModel switchTrack)
           {
-            result.AddRange(switchTrack.GetTracks(this));
-            return result;
+            return switchTrack.GetTracks(this);
           }
           if (item is TrackViewModel track)
           {
@@ -211,14 +210,17 @@ namespace Train2d.Main
     /// Adds a LayoutItem to the guid-dictionary
     /// </summary>
     /// <returns>True when added, False if already exists</returns>
-    public bool AddLayoutItem(ItemViewModel newItem)
+    public bool AddLayoutItem(ItemViewModel newItem, Guid? newGuid = null)
     {
       if (newItem.Id.HasValue)
       {
         return false;
       }
-      Guid newGuid = Guid.NewGuid();
-      _content.Add(newGuid, newItem);
+      if (newGuid == null)
+      {
+        newGuid = Guid.NewGuid();
+      }
+      _content.Add(newGuid.Value, newItem);
       newItem.SetGuid(newGuid);
       InsertItemTypeSorted(newItem);
       return true;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using Train2d.Main.Commands;
 using Train2d.Model;
 using Train2d.Model.Items;
 
@@ -44,15 +45,19 @@ namespace Train2d.Main.ViewModel.Items
       _controller = controller;
     }
 
-    public void Configure(TrackViewModel track, List<Guid> adjacentTracks)
+    public void Configure(Guid? trackId, List<Guid> adjacentTracks)
     {
-      TrackId = track?.Id;
+      TrackId = trackId;
       AdjacentTrackIds = adjacentTracks;
+      NotifyPropertyChanged(nameof(AdjacentTrackIds));
+      NotifyPropertyChanged(nameof(SelectedAdjacentTrackId));
+      NotifyPropertyChanged(nameof(SelectedAngle));
+      NotifyPropertyChanged(nameof(SelectedXScale));
     }
 
-    public override void OnSelectMain(LayoutController controller)
+    public override void OnSelectMain(LayoutController controller, LayoutViewModel layout)
     {
-      List<Guid> adjacentTracks = Item().AdjacentTrackIds;
+      List<Guid> adjacentTracks = Item().AdjacentTrackIds.ToList();
       var firstTrackId = adjacentTracks.FirstOrDefault();
       if (firstTrackId == null)
       {
@@ -61,11 +66,8 @@ namespace Train2d.Main.ViewModel.Items
       //rotate through all possible tracks
       adjacentTracks.Remove(firstTrackId);
       adjacentTracks.Add(firstTrackId);
+      layout.GetCommandController().AddCommand(new ConfigureTrackSwitchCommand(layout, this, TrackId, adjacentTracks));
       Console.WriteLine($"Switched {DateTime.UtcNow} from {firstTrackId} to {adjacentTracks.FirstOrDefault()}");
-      NotifyPropertyChanged(nameof(AdjacentTrackIds));
-      NotifyPropertyChanged(nameof(SelectedAdjacentTrackId));
-      NotifyPropertyChanged(nameof(SelectedAngle));
-      NotifyPropertyChanged(nameof(SelectedXScale));
     }
 
     public List<TrackViewModel> GetTracks(LayoutController controller)

@@ -11,13 +11,13 @@ namespace Train2d.Model.Items
     /// 5  4  3
     /// </summary>
     /// <returns></returns>
-    public Coordinate? GetCoordinateInDirection(int inputDirection)
+    public static Coordinate? GetCoordinateInDirection(Coordinate? coordinate, int inputDirection)
     {
-      if (!Coordinate.HasValue)
+      if (!coordinate.HasValue)
       {
         return null;
       }
-      Coordinate coord = Coordinate.Value;
+      Coordinate coord = coordinate.Value;
       switch (inputDirection)
       {
         case 0:
