@@ -123,115 +123,31 @@ namespace Train2d.Main.ViewModel
       UpdateValidPosition();
     }
 
-    /// <summary>
-    /// Check at all possible tracks around the changed position, whether switches need to be updated.
-    /// </summary>
-    /// <param name="switchCommands">All commands for creating, updating and deleting switches.</param>
-    private void UpdateSwitchesOnsurroundingTracks(Coordinate centerCoordinate, List<CommandBase> switchCommands)
-    {
-      List<TrackViewModel> checkTracks = new List<TrackViewModel>();
-      //Searchrange needs to be 5x5 because horizontal and antidiogonal tracks won't be catched
-      for (int x = centerCoordinate.X - 2; x <= centerCoordinate.X + 2; x++)
-      {
-        for (int y = centerCoordinate.Y - 2; y <= centerCoordinate.Y + 2; y++)
-        {
-          checkTracks.AddRange(_parent.LayoutController.GetLayoutItems(new Coordinate(x, y)).OfType<TrackViewModel>());
-        }
-      }
-      foreach (TrackViewModel checkTrack in checkTracks)
-      {
-        AddSwitchIfNecessary(checkTrack, switchCommands);
-      }
-    }
-
-    /// <summary>
-    /// Check around the track, whether a switch should be added, updated or removed.
-    /// </summary>
-    /// <param name="switchCommands">All commands for creating, updating and deleting switches.</param>
-    private void AddSwitchIfNecessary(TrackViewModel checkTrack, List<CommandBase> switchCommands)
-    {
-      if (checkTrack == null)
-      {
-        return;
-      }
-      if (!checkTrack.Coordinate.HasValue || !checkTrack.EndCoordinate.HasValue)
-      {
-        return;
-      }
-      List<TrackViewModel> adjacentTracksA = new List<TrackViewModel>();
-      List<TrackViewModel> adjacentTracksB = new List<TrackViewModel>();
-      int addedX = checkTrack.Coordinate.Value.X;
-      int addedY = checkTrack.Coordinate.Value.Y;
-
-      //Searchrange needs to be 5x5 because horizontal and antidiogonal tracks won't be catched
-      for (int x = addedX - 2; x <= addedX + 2; x++)
-      {
-        for (int y = addedY - 2; y <= addedY + 2; y++)
-        {
-          var coordinatesInA = ItemViewModel.GetCoordinatesInDirection(checkTrack.Coordinate.Value, checkTrack.GetDirectionInA());
-          var coordinatesInB = ItemViewModel.GetCoordinatesInDirection(checkTrack.EndCoordinate.Value, checkTrack.GetDirectionInB());
-          IEnumerable<TrackViewModel> tracks = _parent.LayoutController.GetLayoutItems(new Coordinate(x, y)).OfType<TrackViewModel>().ToList();
-          //checkTrack is not added, because it does not contains the positions of coordinatesInA or coordinatesInB
-          foreach (TrackViewModel track in tracks)
-          {
-            if (track.ContainsCoordinate(checkTrack.Coordinate.Value))
-            {
-              if (coordinatesInA.Where(directionCoordinate => track.ContainsCoordinate(directionCoordinate.Item2)).Any())
-              {
-                adjacentTracksA.Add(track);
-              }
-            }
-            if (track.ContainsCoordinate(checkTrack.EndCoordinate.Value))
-            {
-              if (coordinatesInB.Where(directionCoordinate => track.ContainsCoordinate(directionCoordinate.Item2)).Any())
-              {
-                adjacentTracksB.Add(track);
-              }
-            }
-          }
-        }
-      }
-      UpdateTrackSwitch(checkTrack, checkTrack.Coordinate.Value, adjacentTracksA, switchCommands);
-      UpdateTrackSwitch(checkTrack, checkTrack.EndCoordinate.Value, adjacentTracksB, switchCommands);
-    }
-
-    /// <summary>
-    ///  Checks, whether a switch should be added, updated or removed.
-    /// </summary>
-    /// <param name="switchCommands">All commands for creating, updating and deleting switches.</param>
-    private void UpdateTrackSwitch(TrackViewModel checkTrack, Coordinate checkCoordinate, List<TrackViewModel> adjacentTracks, List<CommandBase> switchCommands)
-    {
-      if (adjacentTracks.Count < 2)
-      {
-        return;
-      }
-      TrackSwitchViewModel alreadyAddedSwitch = _parent.LayoutController.GetLayoutItems(checkCoordinate).OfType<TrackSwitchViewModel>().FirstOrDefault();
-      if (alreadyAddedSwitch != null)
-      {
-        return;
-      }
-      List<Guid> trackGuids = adjacentTracks.Select(x => x.Id.Value).ToList();
-      List<CommandBase> commands = new List<CommandBase>();
-      TrackSwitchViewModel trackSwitch = new TrackSwitchViewModel();
-      trackSwitch.SetController(_parent.LayoutController);
-      commands.Add(new CreateItemCommand(_parent, trackSwitch, Guid.NewGuid()));
-      commands.Add(new PositionItemOnLayoutCommand(_parent, trackSwitch, checkCoordinate));
-      commands.Add(new ConfigureTrackSwitchCommand(_parent, trackSwitch, checkTrack.Id, trackGuids));
-      switchCommands.Add(new CommandChain(commands));
-    }
-
     private void OnSelectSub()
     {
+      List<ItemViewModel> itemsToRemove = new List<ItemViewModel>();
       if (EditTracks)
       {
-        List<ItemViewModel> items = _parent.LayoutController.GetLayoutItems(_mouseCoordinate);
-        foreach (var item in items)
-        {
-          DeleteItemCommand deleteCommand = new DeleteItemCommand(_parent, item);
-          _parent.GetCommandController().AddCommandAndExecute(deleteCommand);
-        }
+        itemsToRemove.AddRange(_itemsOnMousePosition.OfType<TrackViewModel>().Where(x => Equals(x.Orientation, GetSelectedTrackOrientation())));
+
+      }
+      else if (PlaceTrain)
+      {
+
+      }
+      else if (EditSignals)
+      {
+        itemsToRemove.AddRange(_itemsOnMousePosition.OfType<SignalViewModel>());
       }
 
+
+      foreach (var item in itemsToRemove)
+      {
+        List<CommandBase> removeCommands = new List<CommandBase>();
+        removeCommands.Add(new RemoveItemFromLayoutCommand(_parent, item));
+        removeCommands.Add(new DeleteItemCommand(_parent, item));
+        _parent.GetCommandController().AddCommandAndExecute(new CommandChain(removeCommands));
+      }
     }
 
     private void OnMouseMove()
@@ -279,22 +195,141 @@ namespace Train2d.Main.ViewModel
 
     #endregion
 
-    public bool ValidPosition
-    {
-      get => _validPosition;
-      set
-      { }
-    }
+    #region Update Trackswitches
 
-    public Brush CurserColor
+    /// <summary>
+    /// Check at all possible tracks around the changed position, whether switches need to be updated.
+    /// </summary>
+    /// <param name="switchCommands">All commands for creating, updating and deleting switches.</param>
+    private void UpdateSwitchesOnsurroundingTracks(Coordinate centerCoordinate, List<CommandBase> switchCommands)
     {
-      get => _curserColor;
-      private set
+      List<TrackViewModel> checkTracks = new List<TrackViewModel>();
+      List<TrackSwitchViewModel> alreadyExistingSwitches = new List<TrackSwitchViewModel>();
+      //Searchrange needs to be 5x5 because horizontal and antidiogonal tracks won't be catched otherwise
+      for (int x = centerCoordinate.X - 2; x <= centerCoordinate.X + 2; x++)
       {
-        _curserColor = value;
-        NotifyPropertyChanged(nameof(CurserColor));
+        for (int y = centerCoordinate.Y - 2; y <= centerCoordinate.Y + 2; y++)
+        {
+          List<ItemViewModel> itemsOnPosition = _parent.LayoutController.GetLayoutItems(new Coordinate(x, y));
+          checkTracks.AddRange(itemsOnPosition.OfType<TrackViewModel>());
+          alreadyExistingSwitches.AddRange(itemsOnPosition.OfType<TrackSwitchViewModel>());
+        }
+      }
+      foreach (TrackSwitchViewModel trackSwitch in alreadyExistingSwitches)
+      {
+        if (!trackSwitch.TrackId.HasValue)
+        {
+          continue;
+        }
+        TrackViewModel trackWithSwitch = (TrackViewModel) _parent.LayoutController.GetLayoutItemFromId(trackSwitch.TrackId);
+        if (!checkTracks.Contains(trackWithSwitch))
+        {
+          checkTracks.Add(trackWithSwitch);
+        }
+      }
+      foreach (TrackViewModel checkTrack in checkTracks)
+      {
+        UpdateSwitchIfNecessary(checkTrack, switchCommands);
       }
     }
+
+    /// <summary>
+    /// Check around the track, whether a switch should be added, updated or removed.
+    /// </summary>
+    /// <param name="switchCommands">All commands for creating, updating and deleting switches.</param>
+    private void UpdateSwitchIfNecessary(TrackViewModel checkTrack, List<CommandBase> switchCommands)
+    {
+      if (checkTrack == null)
+      {
+        return;
+      }
+      if (!checkTrack.Coordinate.HasValue || !checkTrack.EndCoordinate.HasValue)
+      {
+        return;
+      }
+      List<TrackViewModel> adjacentTracksA = new List<TrackViewModel>();
+      List<TrackViewModel> adjacentTracksB = new List<TrackViewModel>();
+      int addedX = checkTrack.Coordinate.Value.X;
+      int addedY = checkTrack.Coordinate.Value.Y;
+
+      //Searchrange needs to be 5x5 because horizontal and antidiogonal tracks won't be catched otherwise
+      for (int x = addedX - 2; x <= addedX + 2; x++)
+      {
+        for (int y = addedY - 2; y <= addedY + 2; y++)
+        {
+          var coordinatesInA = ItemViewModel.GetCoordinatesInDirection(checkTrack.Coordinate.Value, checkTrack.GetDirectionInA());
+          var coordinatesInB = ItemViewModel.GetCoordinatesInDirection(checkTrack.EndCoordinate.Value, checkTrack.GetDirectionInB());
+          IEnumerable<TrackViewModel> tracks = _parent.LayoutController.GetLayoutItems(new Coordinate(x, y)).OfType<TrackViewModel>().ToList();
+          //checkTrack is not added, because it does not contains the positions of coordinatesInA or coordinatesInB
+          foreach (TrackViewModel track in tracks)
+          {
+            if (track.ContainsCoordinate(checkTrack.Coordinate.Value))
+            {
+              if (coordinatesInA.Where(directionCoordinate => track.ContainsCoordinate(directionCoordinate.Item2)).Any())
+              {
+                adjacentTracksA.Add(track);
+              }
+            }
+            if (track.ContainsCoordinate(checkTrack.EndCoordinate.Value))
+            {
+              if (coordinatesInB.Where(directionCoordinate => track.ContainsCoordinate(directionCoordinate.Item2)).Any())
+              {
+                adjacentTracksB.Add(track);
+              }
+            }
+          }
+        }
+      }
+      UpdateTrackSwitch(checkTrack, checkTrack.Coordinate.Value, adjacentTracksA, switchCommands);
+      UpdateTrackSwitch(checkTrack, checkTrack.EndCoordinate.Value, adjacentTracksB, switchCommands);
+    }
+
+    /// <summary>
+    ///  Checks, whether a switch should be added, updated or removed.
+    /// </summary>
+    /// <param name="switchCommands">All commands for creating, updating and deleting switches.</param>
+    private void UpdateTrackSwitch(TrackViewModel checkTrack, Coordinate checkCoordinate, List<TrackViewModel> adjacentTracks, List<CommandBase> switchCommands)
+    {
+      TrackSwitchViewModel alreadyExistingSwitch = _parent.LayoutController.GetLayoutItems(checkCoordinate).OfType<TrackSwitchViewModel>().FirstOrDefault();
+
+      if (adjacentTracks.Count < 2)
+      {
+        if (alreadyExistingSwitch != null)
+        {
+          //TODO: Weiche darf auch nicht mehrmals in einer Aktualisierung gelöscht werden...
+          throw new NotImplementedException();
+          List<CommandBase> switchRemoveCommands = new List<CommandBase>();
+          switchRemoveCommands.Add(new ConfigureTrackSwitchCommand(_parent, alreadyExistingSwitch, null, new List<Guid>()));
+          switchRemoveCommands.Add(new RemoveItemFromLayoutCommand(_parent, alreadyExistingSwitch));
+          switchRemoveCommands.Add(new DeleteItemCommand(_parent, alreadyExistingSwitch));
+          switchCommands.Add(new CommandChain(switchRemoveCommands));
+        }
+        return;
+      }
+
+      List<Guid> adjacentTrackIds = adjacentTracks.Select(x => x.Id.Value).ToList();
+
+      if (alreadyExistingSwitch != null)
+      {
+        //Just change the trackconfiguration if necessary
+        List<Guid> adjacentTrackIdsOfExistingSwitch = alreadyExistingSwitch.AdjacentTrackIds;
+        if (!adjacentTrackIds.SequenceEqual(adjacentTrackIdsOfExistingSwitch))
+        { 
+          switchCommands.Add(new ConfigureTrackSwitchCommand(_parent, alreadyExistingSwitch, checkTrack.Id, adjacentTrackIds));
+        }
+        return;
+      }
+
+      List<CommandBase> commands = new List<CommandBase>();
+      TrackSwitchViewModel trackSwitch = new TrackSwitchViewModel();
+      trackSwitch.SetController(_parent.LayoutController);
+      commands.Add(new CreateItemCommand(_parent, trackSwitch, Guid.NewGuid()));
+      commands.Add(new PositionItemOnLayoutCommand(_parent, trackSwitch, checkCoordinate));
+      commands.Add(new ConfigureTrackSwitchCommand(_parent, trackSwitch, checkTrack.Id, adjacentTrackIds));
+      switchCommands.Add(new CommandChain(commands));
+    }
+
+    #endregion
 
     #region Placement Tracks
 
@@ -304,8 +339,6 @@ namespace Train2d.Main.ViewModel
       _previewTrack.SetCoordinate(_mouseCoordinate);
       _previewTrack.SetOrientation(GetSelectedTrackOrientation());
     }
-
-
 
     private TrackOrientation GetSelectedTrackOrientation()
     {
@@ -372,7 +405,7 @@ namespace Train2d.Main.ViewModel
 
     #endregion
 
-    #region Signals
+    #region Placement Signals
 
     public bool EditSignals
     {
@@ -381,6 +414,27 @@ namespace Train2d.Main.ViewModel
       {
         _editSignals = value;
         NotifyPropertyChanged(nameof(EditSignals));
+      }
+    }
+
+    #endregion
+
+    #region Properties
+
+    public bool ValidPosition
+    {
+      get => _validPosition;
+      set
+      { }
+    }
+
+    public Brush CurserColor
+    {
+      get => _curserColor;
+      private set
+      {
+        _curserColor = value;
+        NotifyPropertyChanged(nameof(CurserColor));
       }
     }
 
