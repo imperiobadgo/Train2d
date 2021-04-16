@@ -120,12 +120,6 @@ namespace Train2d.Main.ViewModel
           }
         }
       }
-
-
-
-
-
-
       UpdateValidPosition();
     }
 
@@ -136,9 +130,10 @@ namespace Train2d.Main.ViewModel
     private void UpdateSwitchesOnsurroundingTracks(Coordinate centerCoordinate, List<CommandBase> switchCommands)
     {
       List<TrackViewModel> checkTracks = new List<TrackViewModel>();
-      for (int x = centerCoordinate.X - 1; x <= centerCoordinate.X + 1; x++)
+      //Searchrange needs to be 5x5 because horizontal and antidiogonal tracks won't be catched
+      for (int x = centerCoordinate.X - 2; x <= centerCoordinate.X + 2; x++)
       {
-        for (int y = centerCoordinate.Y - 1; y <= centerCoordinate.Y + 1; y++)
+        for (int y = centerCoordinate.Y - 2; y <= centerCoordinate.Y + 2; y++)
         {
           checkTracks.AddRange(_parent.LayoutController.GetLayoutItems(new Coordinate(x, y)).OfType<TrackViewModel>());
         }
@@ -167,27 +162,20 @@ namespace Train2d.Main.ViewModel
       List<TrackViewModel> adjacentTracksB = new List<TrackViewModel>();
       int addedX = checkTrack.Coordinate.Value.X;
       int addedY = checkTrack.Coordinate.Value.Y;
-      
-      
-      
-      //TODO:
-      //coordinaten in a und b suchen (jeweils 3) und die gefundenen Schienen mit diesen Koordinaten abgleichen
-      for (int x = addedX - 1; x <= addedX + 1; x++)
+
+      //Searchrange needs to be 5x5 because horizontal and antidiogonal tracks won't be catched
+      for (int x = addedX - 2; x <= addedX + 2; x++)
       {
-        for (int y = addedY - 1; y <= addedY + 1; y++)
+        for (int y = addedY - 2; y <= addedY + 2; y++)
         {
-          if (x == addedX && y == addedY)
-          {
-            continue;
-          }
-          var coordinatesInA = ItemViewModel.GetCoordinatesInDirection(checkTrack.EndCoordinate.Value, checkTrack.GetDirectionInA());
-          var coordinatesInB = ItemViewModel.GetCoordinatesInDirection(checkTrack.Coordinate.Value, checkTrack.GetDirectionInB());
-          IEnumerable<TrackViewModel> tracks = _parent.LayoutController.GetLayoutItems(new Coordinate(x, y)).OfType<TrackViewModel>();
+          var coordinatesInA = ItemViewModel.GetCoordinatesInDirection(checkTrack.Coordinate.Value, checkTrack.GetDirectionInA());
+          var coordinatesInB = ItemViewModel.GetCoordinatesInDirection(checkTrack.EndCoordinate.Value, checkTrack.GetDirectionInB());
+          IEnumerable<TrackViewModel> tracks = _parent.LayoutController.GetLayoutItems(new Coordinate(x, y)).OfType<TrackViewModel>().ToList();
+          //checkTrack is not added, because it does not contains the positions of coordinatesInA or coordinatesInB
           foreach (TrackViewModel track in tracks)
           {
             if (track.ContainsCoordinate(checkTrack.Coordinate.Value))
             {
-              //hier muss die andere Koordinate mit der a coordinateliste von oben passen
               if (coordinatesInA.Where(directionCoordinate => track.ContainsCoordinate(directionCoordinate.Item2)).Any())
               {
                 adjacentTracksA.Add(track);
@@ -195,7 +183,6 @@ namespace Train2d.Main.ViewModel
             }
             if (track.ContainsCoordinate(checkTrack.EndCoordinate.Value))
             {
-              //hier muss die andere Koordinate mit der b coordinateliste von oben passen
               if (coordinatesInB.Where(directionCoordinate => track.ContainsCoordinate(directionCoordinate.Item2)).Any())
               {
                 adjacentTracksB.Add(track);
