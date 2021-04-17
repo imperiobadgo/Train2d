@@ -140,14 +140,28 @@ namespace Train2d.Main.ViewModel
         itemsToRemove.AddRange(_itemsOnMousePosition.OfType<SignalViewModel>());
       }
 
-
+      List<CommandBase> removeCommands = new List<CommandBase>();
       foreach (var item in itemsToRemove)
       {
-        List<CommandBase> removeCommands = new List<CommandBase>();
         removeCommands.Add(new RemoveItemFromLayoutCommand(_parent, item));
         removeCommands.Add(new DeleteItemCommand(_parent, item));
-        _parent.GetCommandController().AddCommandAndExecute(new CommandChain(removeCommands));
+
       }
+      if (removeCommands.Count > 0)
+      {
+        CommandChain removeCommandsChain = new CommandChain(removeCommands);
+        _parent.GetCommandController().AddCommandAndExecute(removeCommandsChain);
+
+        List<CommandBase> switchCommands = new List<CommandBase>();
+        UpdateSwitchesOnsurroundingTracks(_mouseCoordinate, switchCommands);
+        foreach (CommandBase switchCommand in switchCommands)
+        {
+          switchCommand.ExecuteAction();
+          //Add to already executed commandchain, to be part of one undo action
+          removeCommandsChain.Add(switchCommand);
+        }
+      }
+      UpdateValidPosition();
     }
 
     private void OnMouseMove()
@@ -221,7 +235,7 @@ namespace Train2d.Main.ViewModel
         {
           continue;
         }
-        TrackViewModel trackWithSwitch = (TrackViewModel) _parent.LayoutController.GetLayoutItemFromId(trackSwitch.TrackId);
+        TrackViewModel trackWithSwitch = (TrackViewModel)_parent.LayoutController.GetLayoutItemFromId(trackSwitch.TrackId);
         if (!checkTracks.Contains(trackWithSwitch))
         {
           checkTracks.Add(trackWithSwitch);
@@ -296,13 +310,14 @@ namespace Train2d.Main.ViewModel
       {
         if (alreadyExistingSwitch != null)
         {
-          //TODO: Weiche darf auch nicht mehrmals in einer Aktualisierung gelöscht werden...
-          throw new NotImplementedException();
-          List<CommandBase> switchRemoveCommands = new List<CommandBase>();
-          switchRemoveCommands.Add(new ConfigureTrackSwitchCommand(_parent, alreadyExistingSwitch, null, new List<Guid>()));
-          switchRemoveCommands.Add(new RemoveItemFromLayoutCommand(_parent, alreadyExistingSwitch));
-          switchRemoveCommands.Add(new DeleteItemCommand(_parent, alreadyExistingSwitch));
-          switchCommands.Add(new CommandChain(switchRemoveCommands));
+          if (Equals(checkTrack.Id, alreadyExistingSwitch.TrackId))
+          {
+            List<CommandBase> switchRemoveCommands = new List<CommandBase>();
+            switchRemoveCommands.Add(new ConfigureTrackSwitchCommand(_parent, alreadyExistingSwitch, null, new List<Guid>()));
+            switchRemoveCommands.Add(new RemoveItemFromLayoutCommand(_parent, alreadyExistingSwitch));
+            switchRemoveCommands.Add(new DeleteItemCommand(_parent, alreadyExistingSwitch));
+            switchCommands.Add(new CommandChain(switchRemoveCommands));
+          }
         }
         return;
       }
@@ -314,7 +329,7 @@ namespace Train2d.Main.ViewModel
         //Just change the trackconfiguration if necessary
         List<Guid> adjacentTrackIdsOfExistingSwitch = alreadyExistingSwitch.AdjacentTrackIds;
         if (!adjacentTrackIds.SequenceEqual(adjacentTrackIdsOfExistingSwitch))
-        { 
+        {
           switchCommands.Add(new ConfigureTrackSwitchCommand(_parent, alreadyExistingSwitch, checkTrack.Id, adjacentTrackIds));
         }
         return;
