@@ -7,7 +7,8 @@ namespace Train2d.Main
 
     public MouseButton SelectMain = MouseButton.Left;
     public MouseButton SelectSub = MouseButton.Right;
-    public MouseButton SelectDrag = MouseButton.Middle;
+    public MouseButton SelectDrag = MouseButton.Right;
+    public MouseButton ResetDrag = MouseButton.Right;
     public double ZoomIncrements = 0.2;
   }
 }

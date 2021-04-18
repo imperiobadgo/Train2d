@@ -19,7 +19,8 @@ namespace Train2d.Main.Controls
     private Vector _newPosition;
     private bool _allowTranslate;
     private Coordinate _mouseCoordinate;
-
+    private bool _mainSelecting;
+    private bool _subSelecting;
     #endregion
 
     #region Construct
@@ -41,19 +42,20 @@ namespace Train2d.Main.Controls
 
     private void OnContentMouseButtonDown(object sender, MouseButtonEventArgs e)
     {
-
-      if (e.ChangedButton == UserSettings.SelectMain)
-        Settings.ExecuteSelectMain();
-      if (e.ChangedButton == UserSettings.SelectSub)
-        Settings.ExecuteSelectSub();
-      if (e.ChangedButton == UserSettings.SelectDrag)
+      if (e.ChangedButton == UserSettings.ResetDrag)
       {
         if (e.ClickCount == 2)
         {
           ResetZoomAndScroll();
           return;
         }
-
+      }
+      if (e.ChangedButton == UserSettings.SelectMain)
+        _mainSelecting = true;
+      if (e.ChangedButton == UserSettings.SelectSub)
+        _subSelecting = true;
+      if (e.ChangedButton == UserSettings.SelectDrag)
+      {
         _start = e.GetPosition(LayoutGrid);
 
         _newPosition.X = Settings.Translate.X;
@@ -69,9 +71,22 @@ namespace Train2d.Main.Controls
     private void OnContentMouseButtonUp(object sender, MouseButtonEventArgs e)
     {
       if (e.ChangedButton == UserSettings.SelectMain)
-        Settings.ExecuteDeselectMain();
+      {
+        if (_mainSelecting)
+        {
+          Settings.ExecuteSelectMain();
+        }
+        _mainSelecting = false;
+      }
       if (e.ChangedButton == UserSettings.SelectSub)
-        Settings.ExecuteDeselectSub();
+      {
+        if (_subSelecting)
+        {
+          Settings.ExecuteSelectSub();
+        }
+        _subSelecting = false;
+      }
+
       if (e.ChangedButton == UserSettings.SelectDrag)
       {
         ZoomContent.ReleaseMouseCapture();
@@ -94,6 +109,8 @@ namespace Train2d.Main.Controls
       {
         return;
       }
+      _mainSelecting = false;
+      _subSelecting = false;
       _mouseCoordinate = newMouseCoordinate;
       Settings.MouseCoordinate = _mouseCoordinate;
       Settings.ExecuteMouseCoordinateChanged();
@@ -125,6 +142,9 @@ namespace Train2d.Main.Controls
       // Fix for double-click reset
       if (Math.Abs(delta.Length) < double.Epsilon)
         return;
+
+      _mainSelecting = false;
+      _subSelecting = false;
 
       var offset = _newPosition - delta;
       Settings.SetOffset(offset);

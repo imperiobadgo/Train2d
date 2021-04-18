@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 using Train2d.Main.Commands;
 using Train2d.Model;
@@ -51,6 +52,8 @@ namespace Train2d.Main.ViewModel.Items
       AdjacentTrackIds = adjacentTracks;
       NotifyPropertyChanged(nameof(AdjacentTrackIds));
       NotifyPropertyChanged(nameof(SelectedAdjacentTrackId));
+      NotifyPropertyChanged(nameof(SelectedPosition));
+      NotifyPropertyChanged(nameof(SelectedCoordinate));
       NotifyPropertyChanged(nameof(SelectedAngle));
       NotifyPropertyChanged(nameof(SelectedXScale));
     }
@@ -140,6 +143,24 @@ namespace Train2d.Main.ViewModel.Items
         return track.Coordinate;
       }
     }
+
+    public Vector SelectedPosition
+    {
+      get
+      {
+        if (_controller is null)
+        {
+          return new Vector(0,0);
+        }
+        TrackViewModel track = (TrackViewModel)_controller.GetLayoutItemFromId(SelectedAdjacentTrackId);
+        if (track == null)
+        {
+          return new Vector(0, 0);
+        }
+        return track.Position;
+      }
+    }
+
     public double SelectedAngle
     {
       get

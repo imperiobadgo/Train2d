@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Train2d.Main.Commands;
 using Train2d.Main.Controls;
 
 namespace Train2d.Main
 {
-  public class CommandController
+  public class CommandController : ViewModel.ViewModelBase
   {
     #region Attributes
 
-    private readonly List<CommandBase> _commands;
-    private readonly List<CommandBase> _redoCommands;
+    private readonly ObservableCollection<CommandBase> _commands;
+    private readonly ObservableCollection<CommandBase> _redoCommands;
     private readonly List<CommandBase> _newCommands;
     #endregion
 
@@ -18,8 +19,8 @@ namespace Train2d.Main
 
     public CommandController()
     {
-      _commands = new List<CommandBase>();
-      _redoCommands = new List<CommandBase>();
+      _commands = new ObservableCollection<CommandBase>();
+      _redoCommands = new ObservableCollection<CommandBase>();
       _newCommands = new List<CommandBase>();
       UndoCommand = new DelegateCommand(UndoCommandExecute);
       RedoCommand = new DelegateCommand(RedoCommandExecute);
@@ -48,6 +49,7 @@ namespace Train2d.Main
         _commands.Add(newCommand);
       }
       _newCommands.Clear();
+      NotifyPropertyChanged(nameof(Commands));
     }
 
     #endregion
@@ -80,6 +82,20 @@ namespace Train2d.Main
       _redoCommands.RemoveAt(_redoCommands.Count - 1);
       lastUndoCommand.ExecuteAction();
       _commands.Add(lastUndoCommand);
+    }
+
+    #endregion
+
+    #region Properties
+
+    public ObservableCollection<CommandBase> Commands
+    {
+      get => _commands;
+    }
+
+    public ObservableCollection<CommandBase> RedoCommands
+    {
+      get => _redoCommands;
     }
 
     #endregion

@@ -20,6 +20,9 @@
 
     protected abstract void Undo();
 
-
+    public string DisplayText
+    {
+      get => ToString();
+    }
   }
 }

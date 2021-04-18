@@ -385,12 +385,12 @@ namespace Train2d.Main.ViewModel
       {
         if (_editTracks)
         {
-          _parent.LayoutController.Items.Remove(_previewTrack);
+          //_parent.LayoutController.Items.Remove(_previewTrack);
         }
         _editTracks = value;
         if (_editTracks)
         {
-          _parent.LayoutController.InsertItemTypeSorted(_previewTrack);
+          //_parent.LayoutController.InsertItemTypeSorted(_previewTrack);
         }
         NotifyPropertyChanged(nameof(EditTracks));
       }

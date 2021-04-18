@@ -32,6 +32,8 @@
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
       <RowDefinition/>
+      <RowDefinition Height="Auto" MinHeight="5"/>
+      <RowDefinition Height="Auto" MinHeight="10"/>
     </Grid.RowDefinitions>
 
     <Grid.ColumnDefinitions>
@@ -80,9 +82,9 @@
                 <Rectangle Width="{x:Static model:Coordinate.CELLSIZE}" Height="4" Fill="{Binding DisplayedColor, Mode=OneWay}" Stroke="Black">
                   <Rectangle.RenderTransform>
                     <TransformGroup>
-                      <ScaleTransform ScaleX="{Binding XScale}"/>
+                      <ScaleTransform ScaleX="{Binding Path=XScale, Mode=OneWay}"/>
                       <TranslateTransform X="0" Y="-2"/>
-                      <RotateTransform Angle="{Binding Angle}"/>
+                      <RotateTransform Angle="{Binding Path=Angle, Mode=OneWay}"/>
                       <TranslateTransform X="{x:Static model:Coordinate.HALFCELLSIZE}" Y="{x:Static model:Coordinate.HALFCELLSIZE}"/>
                     </TransformGroup>
                   </Rectangle.RenderTransform>
@@ -91,21 +93,13 @@
 
               <DataTemplate DataType="{x:Type items:TrackSwitchViewModel}">
                 <Grid>
-                  <Rectangle Width="14" Height="14" Fill="{Binding DisplayedColor, Mode=OneWay}" Stroke="Black">
-                    <Rectangle.RenderTransform>
-                      <TransformGroup>
-                        <TranslateTransform X="-7" Y="-7"/>
-                        <TranslateTransform X="{x:Static model:Coordinate.HALFCELLSIZE}" Y="{x:Static model:Coordinate.HALFCELLSIZE}"/>
-                      </TransformGroup>
-                    </Rectangle.RenderTransform>
-                  </Rectangle>
                   <Rectangle  Width="{x:Static model:Coordinate.HALFCELLSIZE}" Height="4" Fill="{Binding DisplayedColor, Mode=OneWay}" Stroke="Black">
                     <Rectangle.RenderTransform>
                       <TransformGroup>
-                        <ScaleTransform ScaleX="{Binding SelectedXScale}"/>
+                        <ScaleTransform ScaleX="{Binding SelectedXScale, Mode=OneWay}"/>
                         <TranslateTransform X="0" Y="-2"/>
-                        <RotateTransform Angle="{Binding SelectedAngle}"/>
-                        <!--<TranslateTransform X="{x:Static model:Coordinate.HALFCELLSIZE}" Y="{x:Static model:Coordinate.HALFCELLSIZE}"/>-->
+                        <RotateTransform Angle="{Binding SelectedAngle, Mode=OneWay}"/>
+                        <TranslateTransform X="{x:Static model:Coordinate.HALFCELLSIZE}" Y="{x:Static model:Coordinate.HALFCELLSIZE}"/>
                       </TransformGroup>
                     </Rectangle.RenderTransform>
                   </Rectangle>
@@ -143,6 +137,10 @@
     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
       <views:EditorView/>
     </StackPanel>
+
+    <GridSplitter Grid.Row="3" Grid.ColumnSpan="2" Height="5" Visibility="Visible" HorizontalAlignment="Stretch"/>
+
+    <views:CommandsView Grid.Row="4" Grid.ColumnSpan="2" CommandController="{Binding CommandController}"/>
 
   </Grid>
 

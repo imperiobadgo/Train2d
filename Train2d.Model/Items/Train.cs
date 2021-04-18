@@ -13,14 +13,5 @@ namespace Train2d.Model.Items
 
     public int Speed { get; set; } = 0;
 
-
-    #region Direction
-
-    public const int DirectionRange = 8;
-
-    
-
-    #endregion
-
   }
 }

@@ -5,6 +5,11 @@ namespace Train2d.Model.Items
   public class Item
   {
 
+    public Guid? Id { get; set; }
+    public Coordinate? Coordinate { get; set; }
+
+    #region Direction
+
     /// <summary>
     /// 7  0  1
     /// 6     2
@@ -42,8 +47,9 @@ namespace Train2d.Model.Items
       return null;
     }
 
-    public Guid? Id { get; set; }
-    public Coordinate? Coordinate { get; set; }
+    public const int DirectionRange = 8;
+
+    #endregion
 
   }
 }
