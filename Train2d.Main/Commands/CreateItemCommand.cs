@@ -21,5 +21,11 @@ namespace Train2d.Main.Commands
     {
       _viewModel.LayoutController.RemoveLayoutItem(_item);
     }
+
+    public override string ToString()
+    {
+      return $"Created {_item}";
+    }
+
   }
 }

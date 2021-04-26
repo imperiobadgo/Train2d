@@ -20,5 +20,10 @@ namespace Train2d.Main.Commands
     {
       _viewModel.LayoutController.AddLayoutItem(_item, _oldGuid);
     }
+
+    public override string ToString()
+    {
+      return $"Deleted {_item}";
+    }
   }
 }

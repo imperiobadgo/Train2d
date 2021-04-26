@@ -25,5 +25,10 @@ namespace Train2d.Main.Commands
     {
       _item.SetOrientation(_oldOrientation);
     }
+
+    public override string ToString()
+    {
+      return $"Oriented item on {_item.Coordinate} to {_newOrientation}. Type: {_item}";
+    }
   }
 }

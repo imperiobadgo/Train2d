@@ -34,5 +34,10 @@ namespace Train2d.Main.Commands
       _item.Configure(_oldTrack, _oldAdjacentTracks);
     }
 
+    public override string ToString()
+    {
+      return $"Configured from {_oldAdjacentTracks.Count} to {_newAdjacentTracks.Count}. Type: {_item}";
+    }
+
   }
 }

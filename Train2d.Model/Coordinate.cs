@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Train2d.Model
 {
-  [DebuggerDisplay("x={X} y={Y}")]
+  [DebuggerDisplay("{ToString()}")]
   public struct Coordinate
   {
     public const double CELLSIZE = 20;
@@ -37,6 +37,11 @@ namespace Train2d.Model
       hashCode = hashCode * -1521134295 + X.GetHashCode();
       hashCode = hashCode * -1521134295 + Y.GetHashCode();
       return hashCode;
+    }
+
+    public override string ToString()
+    {
+      return $"x={X} y={Y}";
     }
   }
 }

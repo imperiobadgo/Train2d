@@ -9,24 +9,49 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
   <Grid>
+    <Grid.Resources>
+      <local:CommandViewSelector x:Key="commandSelector"/>
+      <DataTemplate x:Key="BaseCommandDataTemplate" DataType="x:Type commands:CommandBase}">
+        <TextBlock Text="{Binding DisplayText}"/>
+      </DataTemplate>
+      <DataTemplate x:Key="CommandChainDataTemplate"  DataType="x:Type commands:CommandChain}">
+        <TreeView>
+          <TreeViewItem Header="{Binding DisplayText}" ItemsSource="{Binding CommandsInChain}" ItemTemplateSelector="{StaticResource commandSelector}"/>
+        </TreeView>
+      </DataTemplate>
+    </Grid.Resources>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="*" MinWidth="50"/>
       <ColumnDefinition Width="*" MinWidth="50"/>
     </Grid.ColumnDefinitions>
-    <ListView Grid.Column="0" HorizontalAlignment="Stretch" ItemsSource="{Binding ElementName=UserControl, Path=CommandController.Commands}">
-      <ListView.ItemTemplate>
-        <DataTemplate DataType="x:Type commands:CommandBase}">
-          <TextBlock Text="{Binding DisplayText}"/>
-        </DataTemplate>
-      </ListView.ItemTemplate>
+    <ListView Grid.Column="0" HorizontalAlignment="Stretch" 
+              ItemsSource="{Binding ElementName=UserControl, Path=CommandController.Commands}"
+              ItemTemplateSelector="{StaticResource commandSelector}">
+      <ListView.ItemContainerStyle>
+        <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+          <Setter Property="DockPanel.Dock" Value="Bottom" />
+        </Style>
+      </ListView.ItemContainerStyle>
+      <ListView.ItemsPanel>
+        <ItemsPanelTemplate>
+          <DockPanel LastChildFill="False" />
+        </ItemsPanelTemplate>
+      </ListView.ItemsPanel>
     </ListView>
     <GridSplitter Grid.Column="0" Width="5" VerticalAlignment="Stretch" />
-    <ListView Grid.Column="1" HorizontalAlignment="Stretch" ItemsSource="{Binding ElementName=UserControl, Path=CommandController.RedoCommands}">
-      <ListView.ItemTemplate>
-        <DataTemplate DataType="x:Type commands:CommandBase}">
-          <TextBlock Text="{Binding DisplayText}"/>
-        </DataTemplate>
-      </ListView.ItemTemplate>
+    <ListView Grid.Column="1" HorizontalAlignment="Stretch" 
+              ItemsSource="{Binding ElementName=UserControl, Path=CommandController.RedoCommands}"
+              ItemTemplateSelector="{StaticResource commandSelector}">
+      <ListView.ItemContainerStyle>
+        <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+          <Setter Property="DockPanel.Dock" Value="Bottom" />
+        </Style>
+      </ListView.ItemContainerStyle>
+      <ListView.ItemsPanel>
+        <ItemsPanelTemplate>
+          <DockPanel LastChildFill="False" />
+        </ItemsPanelTemplate>
+      </ListView.ItemsPanel>
     </ListView>
   </Grid>
 </UserControl>

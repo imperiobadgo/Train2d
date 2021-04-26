@@ -32,5 +32,16 @@ namespace Train2d.Main.Commands
         _commands[i].UndoAction();
       }
     }
+
+    public List<CommandBase> CommandsInChain
+    {
+      get => _commands;
+    }
+
+    public override string ToString()
+    {
+      return $"{_commands.Count} Items";
+    }
+
   }
 }

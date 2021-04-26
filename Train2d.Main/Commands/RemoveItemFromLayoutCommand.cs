@@ -27,5 +27,10 @@ namespace Train2d.Main.Commands
     {
       _viewModel.LayoutController.AddItemToLayout(_coordinate, _item);
     }
+
+    public override string ToString()
+    {
+      return $"Removed item from {_coordinate}. Type: {_item}";
+    }
   }
 }

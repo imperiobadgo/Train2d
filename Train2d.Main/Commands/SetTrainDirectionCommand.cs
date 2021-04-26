@@ -30,5 +30,9 @@ namespace Train2d.Main.Commands
       _item.Direction = _oldDirection;
     }
 
+    public override string ToString()
+    {
+      return $"Set Direction of item to {_newDirection}. Type: {_item}";
+    }
   }
 }

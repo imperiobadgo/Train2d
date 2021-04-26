@@ -22,5 +22,10 @@ namespace Train2d.Main.Commands
     {
       _viewModel.LayoutController.RemoveItemFromLayout(_coordinate, _item);
     }
+
+    public override string ToString()
+    {
+      return $"Positioned item onto {_coordinate}. Type: {_item}";
+    }
   }
 }
