@@ -94,6 +94,8 @@
     <Compile Include="Commands\CommandBase.cs" />
     <Compile Include="Commands\CommandChain.cs" />
     <Compile Include="Commands\CommandItemBase.cs" />
+    <Compile Include="Commands\SetSignalDirectionCommand.cs" />
+    <Compile Include="Commands\SetSignalStateCommand.cs" />
     <Compile Include="Commands\ConfigureTrackSwitchCommand.cs" />
     <Compile Include="Commands\CreateItemCommand.cs" />
     <Compile Include="Commands\DeleteItemCommand.cs" />

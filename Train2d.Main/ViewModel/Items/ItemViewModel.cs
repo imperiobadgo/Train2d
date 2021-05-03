@@ -116,6 +116,8 @@ namespace Train2d.Main.ViewModel.Items
       {
         _mainColor = value;
         DisplayedColor = value;
+        NotifyPropertyChanged(nameof(MainColor));
+        NotifyPropertyChanged(nameof(DisplayedColor));
       }
     }
 

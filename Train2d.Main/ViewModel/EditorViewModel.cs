@@ -6,6 +6,7 @@ using Train2d.Main.Commands;
 using Train2d.Main.ViewModel.Items;
 using Train2d.Model;
 using Train2d.Model.Converter;
+using Train2d.Model.Items;
 
 namespace Train2d.Main.ViewModel
 {
@@ -59,7 +60,7 @@ namespace Train2d.Main.ViewModel
       }
       else if (PlaceTrain)
       {
-        var tracksAtCoordinate = _parent.LayoutController.GetLayoutItems(_mouseCoordinate).OfType<TrackViewModel>().FirstOrDefault();
+        var tracksAtCoordinate = _itemsOnMousePosition.OfType<TrackViewModel>().FirstOrDefault();
 
         TrainViewModel newTrain = new TrainViewModel();
         commands.Add(new CreateItemCommand(_parent, newTrain, Guid.NewGuid()));
@@ -89,9 +90,19 @@ namespace Train2d.Main.ViewModel
       }
       else if (EditSignals)
       {
-        SignalViewModel newSignal = new SignalViewModel();
-        commands.Add(new CreateItemCommand(_parent, newSignal, Guid.NewGuid()));
-        commands.Add(new PositionItemOnLayoutCommand(_parent, newSignal, _mouseCoordinate));
+        var signalAtCoordinate = _itemsOnMousePosition.OfType<SignalViewModel>().FirstOrDefault();
+        if (signalAtCoordinate != null)
+        {
+          int invertedDirection = Item.InvertDirection(signalAtCoordinate.Direction);
+          commands.Add(new SetSignalDirectionCommand(_parent, signalAtCoordinate, invertedDirection));
+        }
+        else
+        {
+          SignalViewModel newSignal = new SignalViewModel();
+          commands.Add(new CreateItemCommand(_parent, newSignal, Guid.NewGuid()));
+          commands.Add(new PositionItemOnLayoutCommand(_parent, newSignal, _mouseCoordinate));
+        }
+
       }
       else
       {
@@ -385,12 +396,12 @@ namespace Train2d.Main.ViewModel
       {
         if (_editTracks)
         {
-          //_parent.LayoutController.Items.Remove(_previewTrack);
+          _parent.LayoutController.Items.Remove(_previewTrack);
         }
         _editTracks = value;
         if (_editTracks)
         {
-          //_parent.LayoutController.InsertItemTypeSorted(_previewTrack);
+          _parent.LayoutController.InsertItemTypeSorted(_previewTrack);
         }
         NotifyPropertyChanged(nameof(EditTracks));
       }

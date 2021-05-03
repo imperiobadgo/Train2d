@@ -118,14 +118,31 @@
               </DataTemplate>
 
               <DataTemplate DataType="{x:Type items:SignalViewModel}">
-                <Rectangle Width="10" Height="10" Fill="{Binding DisplayedColor, Mode=OneWay}">
+                <Path Stroke="Black" Fill="{Binding DisplayedColor, Mode=OneWay}">
+                  <Path.Data>
+                    <GeometryGroup>
+                      <LineGeometry StartPoint="0,0" EndPoint="10,20"/>
+                      <LineGeometry StartPoint="10,20" EndPoint="20,0"/>
+                      <LineGeometry StartPoint="20,0" EndPoint="0,0"/>
+                    </GeometryGroup>
+                  </Path.Data>
+                  <Path.RenderTransform>
+                    <TransformGroup>
+                      <TranslateTransform X="-10" Y="-10"/>
+                      <RotateTransform Angle="{Binding Angle, Mode=OneWay}"/>
+                      <TranslateTransform X="{x:Static model:Coordinate.HALFCELLSIZE}" Y="{x:Static model:Coordinate.HALFCELLSIZE}"/>
+                    </TransformGroup>
+                  </Path.RenderTransform>
+                </Path>
+
+                <!--<Rectangle Width="10" Height="10" Fill="{Binding DisplayedColor, Mode=OneWay}">
                   <Rectangle.RenderTransform>
                     <TransformGroup>
                       <TranslateTransform X="-5" Y="-5"/>
                       <TranslateTransform X="{x:Static model:Coordinate.HALFCELLSIZE}" Y="{x:Static model:Coordinate.HALFCELLSIZE}"/>
                     </TransformGroup>
                   </Rectangle.RenderTransform>
-                </Rectangle>
+                </Rectangle>-->
               </DataTemplate>
             </ItemsControl.Resources>
           </ItemsControl>

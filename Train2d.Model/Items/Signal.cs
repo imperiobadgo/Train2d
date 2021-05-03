@@ -14,5 +14,8 @@ namespace Train2d.Model.Items
     /// 1: Go
     /// </summary>
     public int State { get; set; } = 0;
+
+
+    public int Direction { get; set; } = 0;
   }
 }
