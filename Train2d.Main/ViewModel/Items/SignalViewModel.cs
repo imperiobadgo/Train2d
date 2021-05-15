@@ -91,7 +91,7 @@ namespace Train2d.Main.ViewModel.Items
     {
       get
       {
-        return Direction * 45;
+        return -Direction * 45;
       }
       private set { }
     }

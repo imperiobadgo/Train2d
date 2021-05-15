@@ -153,6 +153,30 @@ namespace Train2d.Main
       return result;
     }
 
+    public List<TrackViewModel> GetTracksOnPosition(Coordinate centerCoordinate)
+    {
+      List<TrackViewModel> checkTracks = new List<TrackViewModel>();
+      //Searchrange needs to be 5x5 because horizontal and antidiogonal tracks won't be catched otherwise
+      for (int x = centerCoordinate.X - 2; x <= centerCoordinate.X + 2; x++)
+      {
+        for (int y = centerCoordinate.Y - 2; y <= centerCoordinate.Y + 2; y++)
+        {
+          List<ItemViewModel> itemsOnPosition = GetLayoutItems(new Coordinate(x, y));
+          checkTracks.AddRange(itemsOnPosition.OfType<TrackViewModel>());
+          //TODO: gleiche Schiene darf nicht mehrmals hinzugefügt werden 
+        }
+      }
+      List<TrackViewModel> result = new List<TrackViewModel>();
+      foreach (var track in checkTracks)
+      {
+        if (track.ContainsCoordinate(centerCoordinate))
+        {
+          result.Add(track);
+        }
+      }
+      return result;
+    }
+
     public List<TrackViewModel> GetAdjacentTracksOnPosition(Coordinate position)
     {
       List<TrackViewModel> result = new List<TrackViewModel>();

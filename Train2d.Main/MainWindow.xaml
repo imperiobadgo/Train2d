@@ -118,7 +118,7 @@
               </DataTemplate>
 
               <DataTemplate DataType="{x:Type items:SignalViewModel}">
-                <Path Stroke="Black" Fill="{Binding DisplayedColor, Mode=OneWay}">
+                <Path Stroke="{Binding DisplayedColor, Mode=OneWay}">
                   <Path.Data>
                     <GeometryGroup>
                       <LineGeometry StartPoint="0,0" EndPoint="10,20"/>

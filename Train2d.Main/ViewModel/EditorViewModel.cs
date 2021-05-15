@@ -98,9 +98,15 @@ namespace Train2d.Main.ViewModel
         }
         else
         {
-          SignalViewModel newSignal = new SignalViewModel();
-          commands.Add(new CreateItemCommand(_parent, newSignal, Guid.NewGuid()));
-          commands.Add(new PositionItemOnLayoutCommand(_parent, newSignal, _mouseCoordinate));
+          var trackAtCoordinate = _itemsOnMousePosition.OfType<TrackViewModel>().FirstOrDefault();
+          if (trackAtCoordinate != null)
+          {
+            SignalViewModel newSignal = new SignalViewModel();
+            commands.Add(new CreateItemCommand(_parent, newSignal, Guid.NewGuid()));
+            commands.Add(new PositionItemOnLayoutCommand(_parent, newSignal, _mouseCoordinate));
+            commands.Add(new SetSignalDirectionCommand(_parent, newSignal, trackAtCoordinate.GetDirectionInA()));
+          }
+
         }
 
       }
@@ -194,9 +200,23 @@ namespace Train2d.Main.ViewModel
         _validPosition = !_itemsOnMousePosition.OfType<TrackViewModel>().Any(x => Equals(x.Orientation, GetSelectedTrackOrientation()));
         UpdatePreviewTrack(_validPosition);
       }
-      else if (PlaceTrain || EditSignals)
+      else if (PlaceTrain)
       {
         _validPosition = _itemsOnMousePosition.OfType<TrackViewModel>().Any();
+        UpdateCurser(_validPosition);
+      }
+      else if (EditSignals)
+      {
+        var tracksOnPosition = _parent.LayoutController.GetTracksOnPosition(_mouseCoordinate);
+        if (tracksOnPosition.Count > 1)
+        {
+          var firstTrack = tracksOnPosition.First();
+          _validPosition = tracksOnPosition.All(x => x.GetDirectionInA() == firstTrack.GetDirectionInA());
+        }
+        else
+        {
+          _validPosition = false;
+        }
         UpdateCurser(_validPosition);
       }
       else

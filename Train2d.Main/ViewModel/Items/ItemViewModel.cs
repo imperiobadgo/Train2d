@@ -123,6 +123,8 @@ namespace Train2d.Main.ViewModel.Items
 
     public Brush DisplayedColor { get; protected set; }
 
+    
+
     #endregion
 
   }
