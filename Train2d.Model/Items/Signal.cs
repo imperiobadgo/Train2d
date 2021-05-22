@@ -8,6 +8,13 @@ namespace Train2d.Model.Items
 {
   public class Signal : Item
   {
+    #region constants
+
+    public const int STATE_HOlD = 0;
+    public const int STATE_GO = 1;
+
+    #endregion
+
 
     /// <summary>
     /// 0: Hold

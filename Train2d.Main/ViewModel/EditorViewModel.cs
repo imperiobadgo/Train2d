@@ -146,7 +146,15 @@ namespace Train2d.Main.ViewModel
       if (EditTracks)
       {
         itemsToRemove.AddRange(_itemsOnMousePosition.OfType<TrackViewModel>().Where(x => Equals(x.Orientation, GetSelectedTrackOrientation())));
-
+        foreach (var trackToRemove in itemsToRemove.OfType<TrackViewModel>().ToList())
+        {
+          Coordinate? otherCoordinate = trackToRemove.GetOtherCoordinate(_mouseCoordinate);
+          if (otherCoordinate.HasValue)
+          {
+            List<ItemViewModel> adjacentItemsToRemove = _parent.LayoutController.GetLayoutItems(otherCoordinate.Value);
+            itemsToRemove.AddRange(adjacentItemsToRemove.OfType<SignalViewModel>());
+          }
+        }
       }
       else if (PlaceTrain)
       {

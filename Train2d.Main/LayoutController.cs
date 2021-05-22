@@ -162,8 +162,13 @@ namespace Train2d.Main
         for (int y = centerCoordinate.Y - 2; y <= centerCoordinate.Y + 2; y++)
         {
           List<ItemViewModel> itemsOnPosition = GetLayoutItems(new Coordinate(x, y));
-          checkTracks.AddRange(itemsOnPosition.OfType<TrackViewModel>());
-          //TODO: gleiche Schiene darf nicht mehrmals hinzugefügt werden 
+          foreach (var item in itemsOnPosition.OfType<TrackViewModel>())
+          {
+            if (!checkTracks.Contains(item))
+            {
+              checkTracks.Add(item);
+            }
+          }          
         }
       }
       List<TrackViewModel> result = new List<TrackViewModel>();
@@ -329,7 +334,7 @@ namespace Train2d.Main
         {
           trackSwitch.SetController(this);
         }
-        Items.Add(newItem);
+        InsertItemTypeSorted(newItem);
       });
       layout.LayoutItems.ForEach(x => _layout.Add(x.Position, x.ItemIds));
     }

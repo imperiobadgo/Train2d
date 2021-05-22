@@ -59,7 +59,9 @@ namespace Train2d.Main.ViewModel.Items
       {
         return;
       }
+      //track, track direction, targetposition
       List<Tuple<TrackViewModel, int, Coordinate>> resultTracks = new List<Tuple<TrackViewModel, int, Coordinate>>();
+      //direction, position in direction
       List<Tuple<int, Coordinate>> coordsInDirection = GetCoordinatesInDirection(Coordinate, Direction);
       foreach (TrackViewModel track in possibleTracks)
       {
@@ -77,10 +79,18 @@ namespace Train2d.Main.ViewModel.Items
 
       if (resultTracks.Count == 1)
       {
+        Coordinate targetCoordinate = resultTracks[0].Item3;
+        int targetDirection = resultTracks[0].Item2;
+        List<ItemViewModel> itemsOnTargetPositions = layout.LayoutController.GetLayoutItems(targetCoordinate);
+        bool mustStop = itemsOnTargetPositions.OfType<SignalViewModel>().Any(signal => signal.Direction == targetDirection && signal.State == Signal.STATE_HOlD);
+        if (mustStop)
+        {
+          return;
+        }
         List<CommandBase> commands = new List<CommandBase>();
         commands.Add(new RemoveItemFromLayoutCommand(layout, this));
-        commands.Add(new PositionItemOnLayoutCommand(layout, this, resultTracks[0].Item3));
-        commands.Add(new SetTrainDirectionCommand(layout, this, resultTracks[0].Item2));
+        commands.Add(new PositionItemOnLayoutCommand(layout, this, targetCoordinate));
+        commands.Add(new SetTrainDirectionCommand(layout, this, targetDirection));
         CommandChain chain = new CommandChain(commands);
 
         layout.GetCommandController().AddCommand(chain);
