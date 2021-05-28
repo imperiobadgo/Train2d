@@ -53,7 +53,7 @@
       <Label Content="{Binding SelectedView.FramesPerSecond}"/>
     </StackPanel>
 
-    <controls:LayoutView Grid.Row="2" Grid.Column="0" Settings="{Binding Path=SelectedView.Settings, Mode=OneWay}" UserSettings="{Binding Path=UserSettings, Mode=OneWay}" ShowControls="True">
+    <controls:LayoutView x:Name="MainLayout" Grid.Row="2" Grid.Column="0" Settings="{Binding Path=SelectedView.Settings, Mode=OneWay}" UserSettings="{Binding Path=UserSettings, Mode=OneWay}" ShowControls="True">
       <controls:LayoutView.CanvasContent>
         <Grid Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center" LayoutTransform="{StaticResource ResourceKey=Viewer2DSketchScale}">
           <layout:LayoutCoordinates ScaleFactor="{Binding Path=SelectedView.Settings.ScaleFactor, Mode=OneWay, Converter={StaticResource ResourceKey=ScaleInverseConverter}, ConverterParameter={StaticResource Viewer2DScaleFactor}}" />
@@ -150,8 +150,13 @@
         </Grid>
       </controls:LayoutView.CanvasContent>
     </controls:LayoutView>
+    <ScrollViewer Grid.Row="2" Grid.Column="0" Margin="10" MaxWidth="300" MaxHeight="{Binding ElementName=MainLayout, Path=ActualHeight}"
+                  HorizontalAlignment="Left" VerticalAlignment="Center" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+      <views:ItemListView />
+    </ScrollViewer>
 
-    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
+
+    <StackPanel Grid.Row="2" Grid.Column="1" Margin="10" Orientation="Vertical">
       <views:EditorView/>
     </StackPanel>
 

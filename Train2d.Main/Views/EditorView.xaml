@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Train2d.Main.Views" 
-             xmlns:viewmodel="clr-namespace:Train2d.Main.ViewModel"
+             xmlns:viewmodel="clr-namespace:Train2d.Main.ViewModel"             
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance viewmodel:MainWindowViewModel}">
   <StackPanel>
@@ -21,8 +21,5 @@
     </GroupBox>
     <RadioButton GroupName="EditorMode" Content="Add Train" IsChecked="{Binding Path=SelectedView.EditorController.PlaceTrain}"/>
     <RadioButton GroupName="EditorMode" Content="Edit Signals" IsChecked="{Binding Path=SelectedView.EditorController.EditSignals}"/>
-
-
-
   </StackPanel>
 </UserControl>

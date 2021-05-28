@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media;
 using Train2d.Main.Commands;
@@ -22,7 +23,8 @@ namespace Train2d.Main.ViewModel
     private bool _validPosition;
     private Brush _curserColor;
     private TrackViewModel _previewTrack;
-    private List<ItemViewModel> _itemsOnMousePosition;
+    private List<ItemViewModel> _itemsOnMousePosition = new List<ItemViewModel>();
+    private ObservableCollection<ItemViewModel> _selectedItems;
 
     #endregion
 
@@ -31,6 +33,7 @@ namespace Train2d.Main.ViewModel
     public EditorViewModel(LayoutViewModel parent)
     {
       _parent = parent;
+      SelectedItems = new ObservableCollection<ItemViewModel>();
       _parent.Settings.SetOnSelectMainAction(OnSelectMain);
       _parent.Settings.SetOnSelectSubAction(OnSelectSub);
       _parent.Settings.SetOnMouseMoveAction(OnMouseMove);
@@ -112,12 +115,17 @@ namespace Train2d.Main.ViewModel
       }
       else
       {
-
+        SelectedItems.Clear();
         foreach (var item in _itemsOnMousePosition)
         {
-          item.OnSelectMain(_parent.LayoutController, _parent);
+          SelectedItems.Add(item);
         }
-        _parent.GetCommandController().ExecuteNewCommands();
+        
+        //foreach (var item in _itemsOnMousePosition)
+        //{
+        //  item.OnSelectMain(_parent.LayoutController, _parent);
+        //}
+        //_parent.GetCommandController().ExecuteNewCommands();
       }
 
       if (commands.Count > 0)
@@ -489,6 +497,15 @@ namespace Train2d.Main.ViewModel
       {
         _curserColor = value;
         NotifyPropertyChanged(nameof(CurserColor));
+      }
+    }
+
+    public ObservableCollection<ItemViewModel> SelectedItems
+    {
+      get => _selectedItems;
+      private set
+      {
+        _selectedItems = value;
       }
     }
 
