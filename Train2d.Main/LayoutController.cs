@@ -316,7 +316,7 @@ namespace Train2d.Main
       return result;
     }
 
-    public void SetLayout(Layout layout)
+    public void SetLayout(LayoutViewModel viewModel, Layout layout)
     {
       _layout.Clear();
       _content.Clear();
@@ -330,10 +330,7 @@ namespace Train2d.Main
         {
           _updateableItems.Add(updateableItem);
         }
-        if (newItem is TrackSwitchViewModel trackSwitch)
-        {
-          trackSwitch.SetController(this);
-        }
+        newItem.SetLayout(viewModel);
         InsertItemTypeSorted(newItem);
       });
       layout.LayoutItems.ForEach(x => _layout.Add(x.Position, x.ItemIds));

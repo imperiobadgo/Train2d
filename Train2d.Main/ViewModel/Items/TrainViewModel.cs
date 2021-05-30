@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using Train2d.Main.Commands;
+using Train2d.Main.Controls;
 using Train2d.Model;
 using Train2d.Model.Items;
 
@@ -14,8 +15,7 @@ namespace Train2d.Main.ViewModel.Items
   {
     #region Attributes
 
-    private int _coolDown;
-    private int _resetCoolDown = 10;
+    private float _currentPositionInCell;
 
     #endregion
 
@@ -26,10 +26,10 @@ namespace Train2d.Main.ViewModel.Items
 
     public TrainViewModel(Train newTrain)
     {
+      InvertDirectionCommand = new DelegateCommand(InvertDirectionCommandExecute);
       SetItem(newTrain);
       DisplayOrder = 5;
       MainColor = Brushes.DarkBlue;
-      _coolDown = _resetCoolDown;
     }
 
     protected override void OnItemSet(Item item)
@@ -47,12 +47,16 @@ namespace Train2d.Main.ViewModel.Items
       {
         return;
       }
-      if (_coolDown > 0)
+      if (ForceStop)
       {
-        _coolDown -= 1;
         return;
       }
-      _coolDown = _resetCoolDown;
+      if (_currentPositionInCell < Model.Coordinate.CELLSIZE)
+      {
+        _currentPositionInCell += deltaTime * Item().Speed;
+        return;
+      }
+      _currentPositionInCell = 0;
 
       List<TrackViewModel> possibleTracks = layout.LayoutController.GetAdjacentTracksOnPosition(Coordinate.Value);
       if (possibleTracks.Count == 0)
@@ -99,7 +103,56 @@ namespace Train2d.Main.ViewModel.Items
 
     #endregion
 
+    #region Userproperties
+
+    public bool ForceStopChanger
+    {
+      get => Item().ForceStop;
+      set
+      {
+        if (_layout == null)
+        {
+          return;
+        }
+        _layout.GetCommandController().AddCommandAndExecute(new SetTrainForceStopStateCommand(_layout, this, !Item().ForceStop));
+      }
+    }
+
+    #endregion
+
+    #region Commands
+
+    public DelegateCommand InvertDirectionCommand { get; private set; }
+
+    private void InvertDirectionCommandExecute(object o)
+    {
+      int invertedDirection = Model.Items.Item.InvertDirection(Item().Direction);
+      _layout.GetCommandController().AddCommandAndExecute(new SetTrainDirectionCommand(_layout, this, invertedDirection));
+    }
+
+    #endregion
+
     #region Properties
+
+    public string TrainName
+    {
+      get => Item().TrainName;
+      set
+      {
+        Item().TrainName = value;
+        NotifyPropertyChanged(nameof(TrainName));
+      }
+    }
+
+    public bool ForceStop
+    {
+      get => Item().ForceStop;
+      set
+      {
+        Item().ForceStop = value;
+        NotifyPropertyChanged(nameof(ForceStop));
+      }
+    }
 
     public int Direction
     {
@@ -108,7 +161,32 @@ namespace Train2d.Main.ViewModel.Items
       {
         Item().Direction = value;
         NotifyPropertyChanged(nameof(Direction));
+        NotifyPropertyChanged(nameof(Angle));
       }
+    }
+
+    public int Speed
+    {
+      get => Item().Speed;
+      set
+      {
+        if (value < 1)
+        {
+          value = 1;
+        }
+        if (value > 150)
+        {
+          value = 150;
+        }
+        Item().Speed = value;
+        NotifyPropertyChanged(nameof(Speed));
+      }
+    }
+
+    public double Angle
+    {
+      get => -Direction * 45;
+      private set { }
     }
 
     #endregion

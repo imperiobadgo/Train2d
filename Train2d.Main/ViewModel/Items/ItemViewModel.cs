@@ -43,6 +43,11 @@ namespace Train2d.Main.ViewModel.Items
       _item.Id = newId;
     }
 
+    public void SetLayout(LayoutViewModel layout)
+    {
+      _layout = layout;
+    }
+
     public void SetCoordinate(Coordinate? _position)
     {
       _item.Coordinate = _position;
@@ -124,8 +129,6 @@ namespace Train2d.Main.ViewModel.Items
     }
 
     public Brush DisplayedColor { get; protected set; }
-
-    public string Name { get => ToString(); }
 
     #endregion
 

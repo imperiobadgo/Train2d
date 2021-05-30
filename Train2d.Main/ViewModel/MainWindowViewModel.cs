@@ -95,7 +95,7 @@ namespace Train2d.Main.ViewModel
           using (XmlReader reader = XmlReader.Create(stream))
           {
             Layout loadedLayout = (Layout)serializer.Deserialize(reader);
-            SelectedView.LayoutController.SetLayout(loadedLayout);
+            SelectedView.LayoutController.SetLayout(SelectedView, loadedLayout);
           }
         }
         catch (Exception ex)

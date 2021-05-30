@@ -15,12 +15,6 @@ namespace Train2d.Main.ViewModel.Items
   public class TrackSwitchViewModel : ItemGenericViewModel<TrackSwitch>
   {
 
-    #region Attributes
-
-    private LayoutController _controller;
-
-    #endregion
-
     #region Construct
 
     public TrackSwitchViewModel() : this(new TrackSwitch())
@@ -42,11 +36,6 @@ namespace Train2d.Main.ViewModel.Items
     #endregion
 
     #region Methods
-
-    public void SetController(LayoutController controller)
-    {
-      _controller = controller;
-    }
 
     public void Configure(Guid? trackId, List<Guid> adjacentTracks)
     {
@@ -153,11 +142,11 @@ namespace Train2d.Main.ViewModel.Items
     {
       get
       {
-        if (_controller is null)
+        if (_layout is null)
         {
           return null;
         }
-        TrackViewModel track = (TrackViewModel)_controller.GetLayoutItemFromId(SelectedAdjacentTrackId);
+        TrackViewModel track = (TrackViewModel)_layout.LayoutController.GetLayoutItemFromId(SelectedAdjacentTrackId);
         return track == null ? null : track.Coordinate;
       }
     }
@@ -166,11 +155,11 @@ namespace Train2d.Main.ViewModel.Items
     {
       get
       {
-        if (_controller is null)
+        if (_layout is null)
         {
           return new Vector(0, 0);
         }
-        TrackViewModel track = (TrackViewModel)_controller.GetLayoutItemFromId(SelectedAdjacentTrackId);
+        TrackViewModel track = (TrackViewModel)_layout.LayoutController.GetLayoutItemFromId(SelectedAdjacentTrackId);
         return track == null ? new Vector(0, 0) : track.Position;
       }
     }
@@ -179,11 +168,11 @@ namespace Train2d.Main.ViewModel.Items
     {
       get
       {
-        if (_controller is null)
+        if (_layout is null)
         {
           return 0;
         }
-        TrackViewModel track = (TrackViewModel)_controller.GetLayoutItemFromId(SelectedAdjacentTrackId);
+        TrackViewModel track = (TrackViewModel)_layout.LayoutController.GetLayoutItemFromId(SelectedAdjacentTrackId);
         return track == null ? 0 : track.Angle;
       }
     }
@@ -192,11 +181,11 @@ namespace Train2d.Main.ViewModel.Items
     {
       get
       {
-        if (_controller is null)
+        if (_layout is null)
         {
           return 0;
         }
-        TrackViewModel track = (TrackViewModel)_controller.GetLayoutItemFromId(SelectedAdjacentTrackId);
+        TrackViewModel track = (TrackViewModel)_layout.LayoutController.GetLayoutItemFromId(SelectedAdjacentTrackId);
         return track == null ? 0 : track.XScale;
       }
     }

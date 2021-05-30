@@ -103,6 +103,7 @@
     <Compile Include="Commands\RemoveItemFromLayoutCommand.cs" />
     <Compile Include="Commands\SetTrainDirectionCommand.cs" />
     <Compile Include="Commands\PositionItemOnLayoutCommand.cs" />
+    <Compile Include="Commands\SetTrainForceStopStateCommand.cs" />
     <Compile Include="Controls\DelegateCommand.cs" />
     <Compile Include="Controls\Layout\LayoutCoordinates.xaml.cs">
       <DependentUpon>LayoutCoordinates.xaml</DependentUpon>

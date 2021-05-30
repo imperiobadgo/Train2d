@@ -20,6 +20,7 @@ namespace Train2d.Main.Controls
     private Action _onMouseMoveAction;
     private Action _onMouseCoordinateChangedAction;
     private Coordinate _mouseCoordinate;
+    private Coordinate _lastClickedMouseCoordinate;
     private object _selectMainLockObject = new object();
     private object _selectSubLockObject = new object();
 
@@ -93,6 +94,7 @@ namespace Train2d.Main.Controls
     {
       lock (_selectMainLockObject)
       {
+        LastClickedMouseCoordinate = MouseCoordinate;
         _onSelectMainAction?.Invoke();
       }
     }
@@ -171,6 +173,20 @@ namespace Train2d.Main.Controls
         NotifyPropertyChanged(nameof(MouseCoordinatePosition));
       }
     }
+
+    public Vector LastClickedMouseCoordinatePosition { get => LastClickedMouseCoordinate.ToVector(); set { } }
+
+    public Coordinate LastClickedMouseCoordinate
+    {
+      get => _lastClickedMouseCoordinate;
+      set
+      {
+        _lastClickedMouseCoordinate = value;
+        NotifyPropertyChanged(nameof(LastClickedMouseCoordinate));
+        NotifyPropertyChanged(nameof(LastClickedMouseCoordinatePosition));
+      }
+    }
+
     #endregion
 
     public event PropertyChangedEventHandler PropertyChanged;

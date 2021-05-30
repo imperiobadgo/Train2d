@@ -12,33 +12,56 @@
                 Background="#99AAAAAA" Padding="5">
     <ItemsControl.Resources>
       <DataTemplate DataType="{x:Type items:TrackViewModel}">
-        <StackPanel Background="{Binding MainColor}">
-          <TextBlock Margin="2" Text="{Binding Name}"/>
-          <CheckBox Margin="2" Content="Option 1"/>
-          <CheckBox Margin="2" Content="Option 2"/>
-          <CheckBox Margin="2" Content="Option 3"/>
-        </StackPanel>
-        
+        <Border BorderThickness="2" BorderBrush="{Binding MainColor}">
+          <StackPanel>
+            <CheckBox Margin="2" Content="Option 1"/>
+            <CheckBox Margin="2" Content="Option 2"/>
+            <CheckBox Margin="2" Content="Option 3"/>
+          </StackPanel>
+        </Border>
       </DataTemplate>
 
       <DataTemplate DataType="{x:Type items:TrackSwitchViewModel}">
-        <StackPanel Background="{Binding MainColor}">
-          <TextBlock Margin="2" Text="{Binding Name}"/>
-          <Button Margin="2" Content="Change Switch" Command="{Binding ChangeSwitchCommand}"/>
-        </StackPanel>
+        <Border BorderThickness="2" BorderBrush="{Binding MainColor}">
+          <StackPanel>
+            <Button Margin="2" Content="Change Switch" Command="{Binding ChangeSwitchCommand}"/>
+          </StackPanel>
+        </Border>
       </DataTemplate>
 
       <DataTemplate DataType="{x:Type items:SignalViewModel}">
-        <StackPanel Background="{Binding MainColor}">
-          <TextBlock Text="{Binding Name}"/>
-          <CheckBox Margin="2" IsChecked="{Binding StateChanger}" Content="State"/>
-        </StackPanel>
+        <Border BorderThickness="2" BorderBrush="{Binding MainColor}">
+          <StackPanel>
+            <CheckBox Margin="2" IsChecked="{Binding StateChanger}" Content="State"/>
+          </StackPanel>
+        </Border>
       </DataTemplate>
 
       <DataTemplate DataType="{x:Type items:TrainViewModel}">
-        <StackPanel Background="{Binding MainColor}">
-          <TextBlock Margin="2" Text="{Binding Name}"/>
-        </StackPanel>
+        <Border BorderThickness="2" BorderBrush="{Binding MainColor}">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition/>
+              <RowDefinition/>
+              <RowDefinition/>
+              <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBox Grid.Column="1" Grid.Row="0" Margin="2" Text="{Binding TrainName}"/>
+            <TextBlock Grid.Column="0" Grid.Row="1" Margin="2" Text="Direction"/>
+            <TextBlock Grid.Column="1" Grid.Row="1" Margin="2" Text="{Binding Direction}"/>
+
+            <TextBlock Grid.Column="0" Grid.Row="2" Margin="2" Text="Speed"/>
+            <TextBox Grid.Column="1" Grid.Row="2" Margin="2" Text="{Binding Speed}"/>
+                        
+            <CheckBox Grid.Column="1" Grid.Row="3" Margin="2" IsChecked="{Binding ForceStopChanger}" Content="Stop"/>
+            <Button Grid.Column="1" Grid.Row="4" Margin="2" Content="Invert Direction" Command="{Binding InvertDirectionCommand}"/>
+          </Grid>
+        </Border>
+
       </DataTemplate>
 
     </ItemsControl.Resources>

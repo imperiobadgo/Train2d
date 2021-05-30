@@ -8,7 +8,7 @@ using Train2d.Main.ViewModel.Items;
 
 namespace Train2d.Main.Commands
 {
-  class SetTrainDirectionCommand : CommandItemBase<TrainViewModel>
+  public class SetTrainDirectionCommand : CommandItemBase<TrainViewModel>
   {
     private int _newDirection;
     private int _oldDirection;

@@ -59,6 +59,8 @@
           <layout:LayoutCoordinates ScaleFactor="{Binding Path=SelectedView.Settings.ScaleFactor, Mode=OneWay, Converter={StaticResource ResourceKey=ScaleInverseConverter}, ConverterParameter={StaticResource Viewer2DScaleFactor}}" />
           <layout:PositionIndicator ScaleFactor="{Binding Path=SelectedView.Settings.ScaleFactor, Mode=OneWay, Converter={StaticResource ResourceKey=ScaleInverseConverter}, ConverterParameter={StaticResource Viewer2DScaleFactor}}" 
                                     Position="{Binding Path=SelectedView.Settings.MouseCoordinatePosition, Mode=OneWay}" Color="{Binding Path=SelectedView.EditorController.CurserColor}"/>
+          <layout:PositionIndicator ScaleFactor="{Binding Path=SelectedView.Settings.ScaleFactor, Mode=OneWay, Converter={StaticResource ResourceKey=ScaleInverseConverter}, ConverterParameter={StaticResource Viewer2DScaleFactor}}" 
+                                    Position="{Binding Path=SelectedView.Settings.LastClickedMouseCoordinatePosition, Mode=OneWay}" Color="Coral"/>
           <ItemsControl
           ItemsSource="{Binding Path=SelectedView.LayoutController.Items}">
             <ItemsControl.ItemsPanel>
@@ -107,14 +109,40 @@
               </DataTemplate>
 
               <DataTemplate DataType="{x:Type items:TrainViewModel}">
-                <Ellipse Width="7" Height="7" Fill="{Binding DisplayedColor, Mode=OneWay}">
+                <Path Stroke="{Binding DisplayedColor, Mode=OneWay}" Fill="{Binding DisplayedColor, Mode=OneWay}">
+                  <Path.Data>
+                    <PathGeometry>
+                      <PathGeometry.Figures>
+                        <PathFigure StartPoint="0,0" IsClosed="True">
+                          <LineSegment Point="7,14" />
+                          <LineSegment Point="14,0" />
+                        </PathFigure>
+                      </PathGeometry.Figures>
+                    </PathGeometry>
+                    
+                    <!--<GeometryGroup FillRule="Nonzero">
+                      
+                      <LineGeometry StartPoint="0,0" EndPoint="7,14"/>
+                      <LineGeometry StartPoint="7,14" EndPoint="14,0"/>
+                      <LineGeometry StartPoint="14,0" EndPoint="0,0"/>
+                    </GeometryGroup>-->
+                  </Path.Data>
+                  <Path.RenderTransform>
+                    <TransformGroup>
+                      <TranslateTransform X="-7" Y="-7"/>
+                      <RotateTransform Angle="{Binding Angle, Mode=OneWay}"/>
+                      <TranslateTransform X="{x:Static model:Coordinate.HALFCELLSIZE}" Y="{x:Static model:Coordinate.HALFCELLSIZE}"/>
+                    </TransformGroup>
+                  </Path.RenderTransform>
+                </Path>
+                <!--<Ellipse Width="7" Height="7" Fill="{Binding DisplayedColor, Mode=OneWay}">
                   <Ellipse.RenderTransform>
                     <TransformGroup>
                       <TranslateTransform X="-3.5" Y="-3.5"/>
                       <TranslateTransform X="{x:Static model:Coordinate.HALFCELLSIZE}" Y="{x:Static model:Coordinate.HALFCELLSIZE}"/>
                     </TransformGroup>
                   </Ellipse.RenderTransform>
-                </Ellipse>
+                </Ellipse>-->
               </DataTemplate>
 
               <DataTemplate DataType="{x:Type items:SignalViewModel}">

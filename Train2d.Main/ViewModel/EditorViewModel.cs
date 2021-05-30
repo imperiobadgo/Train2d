@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 using System.Windows.Media;
 using Train2d.Main.Commands;
 using Train2d.Main.ViewModel.Items;
@@ -115,17 +116,23 @@ namespace Train2d.Main.ViewModel
       }
       else
       {
-        SelectedItems.Clear();
-        foreach (var item in _itemsOnMousePosition)
+        if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
         {
-          SelectedItems.Add(item);
+          foreach (var item in _itemsOnMousePosition)
+          {
+            item.OnSelectMain(_parent.LayoutController, _parent);
+          }
+          _parent.GetCommandController().ExecuteNewCommands();
         }
-        
-        //foreach (var item in _itemsOnMousePosition)
-        //{
-        //  item.OnSelectMain(_parent.LayoutController, _parent);
-        //}
-        //_parent.GetCommandController().ExecuteNewCommands();
+        else
+        {
+          SelectedItems.Clear();
+          foreach (var item in _itemsOnMousePosition)
+          {
+            SelectedItems.Add(item);
+          }
+        }
+
       }
 
       if (commands.Count > 0)
@@ -384,7 +391,6 @@ namespace Train2d.Main.ViewModel
 
       List<CommandBase> commands = new List<CommandBase>();
       TrackSwitchViewModel trackSwitch = new TrackSwitchViewModel();
-      trackSwitch.SetController(_parent.LayoutController);
       commands.Add(new CreateItemCommand(_parent, trackSwitch, Guid.NewGuid()));
       commands.Add(new PositionItemOnLayoutCommand(_parent, trackSwitch, checkCoordinate));
       commands.Add(new ConfigureTrackSwitchCommand(_parent, trackSwitch, checkTrack.Id, adjacentTrackIds));
