@@ -41,9 +41,9 @@ namespace Train2d.Main.ViewModel.Items
 
     #region Methods
 
-    public void Update(LayoutViewModel layout, float deltaTime)
+    public void Update(float deltaTime)
     {
-      if (!Coordinate.HasValue)
+      if (!Coordinate.HasValue || _layout == null)
       {
         return;
       }
@@ -58,7 +58,7 @@ namespace Train2d.Main.ViewModel.Items
       }
       _currentPositionInCell = 0;
 
-      List<TrackViewModel> possibleTracks = layout.LayoutController.GetAdjacentTracksOnPosition(Coordinate.Value);
+      List<TrackViewModel> possibleTracks = _layout.LayoutController.GetAdjacentTracksOnPosition(Coordinate.Value);
       if (possibleTracks.Count == 0)
       {
         return;
@@ -85,19 +85,27 @@ namespace Train2d.Main.ViewModel.Items
       {
         Coordinate targetCoordinate = resultTracks[0].Item3;
         int targetDirection = resultTracks[0].Item2;
-        List<ItemViewModel> itemsOnTargetPositions = layout.LayoutController.GetLayoutItems(targetCoordinate);
-        bool mustStop = itemsOnTargetPositions.OfType<SignalViewModel>().Any(signal => signal.Direction == targetDirection && signal.State == Signal.STATE_HOlD);
+        List<ItemViewModel> itemsOnTargetPosition = _layout.LayoutController.GetLayoutItems(targetCoordinate);
+        bool mustStop = itemsOnTargetPosition.OfType<SignalViewModel>().Any(signal => signal.Direction == targetDirection && signal.State == Signal.STATE_HOlD);
         if (mustStop)
         {
           return;
         }
-        List<CommandBase> commands = new List<CommandBase>();
-        commands.Add(new RemoveItemFromLayoutCommand(layout, this));
-        commands.Add(new PositionItemOnLayoutCommand(layout, this, targetCoordinate));
-        commands.Add(new SetTrainDirectionCommand(layout, this, targetDirection));
+        List<ItemViewModel> itemsOnCurrentPosition = _layout.LayoutController.GetLayoutItems(Coordinate.Value);
+        List<SignalViewModel> signalsOnCurrentPosition = itemsOnCurrentPosition.OfType<SignalViewModel>().Where(signal => signal.Direction == targetDirection && signal.State == Signal.STATE_GO).ToList();
+        List<CommandBase> commands = new List<CommandBase>();        
+        commands.Add(new RemoveItemFromLayoutCommand(_layout, this));
+        commands.Add(new PositionItemOnLayoutCommand(_layout, this, targetCoordinate));
+        commands.Add(new SetTrainDirectionCommand(_layout, this, targetDirection));
+
+        foreach (var currentSignal in signalsOnCurrentPosition)
+        {
+          commands.Add(new SetSignalStateCommand(_layout, currentSignal, Signal.STATE_HOlD));
+        }
+
         CommandChain chain = new CommandChain(commands);
 
-        layout.GetCommandController().AddCommand(chain);
+        _layout.GetCommandController().AddCommand(chain);
       }
     }
 

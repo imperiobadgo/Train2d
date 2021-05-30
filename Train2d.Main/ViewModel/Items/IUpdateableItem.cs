@@ -8,6 +8,6 @@ namespace Train2d.Main.ViewModel.Items
 {
   interface IUpdateableItem
   {
-    void Update(LayoutViewModel layout, float deltaTime);
+    void Update(float deltaTime);
   }
 }

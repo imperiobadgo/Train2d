@@ -53,11 +53,11 @@ namespace Train2d.Main
 
     #region Methods - Update
 
-    public void Update(LayoutViewModel layout, float deltaTime)
+    public void Update(float deltaTime)
     {
       foreach (var item in _updateableItems)
       {
-        item.Update(layout, deltaTime);
+        item.Update(deltaTime);
       }
     }
 

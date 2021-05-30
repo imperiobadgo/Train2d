@@ -63,7 +63,7 @@ namespace Train2d.Main.ViewModel
       float deltaTime = (_time2.Ticks - _time1.Ticks) / 10000000f;
       if (!Pause)
       {
-        LayoutController.Update(this, deltaTime);
+        LayoutController.Update(deltaTime);
         GetCommandController().ExecuteNewCommands();
         //Console.WriteLine($"Updated deltaTime: {deltaTime}");
       }
