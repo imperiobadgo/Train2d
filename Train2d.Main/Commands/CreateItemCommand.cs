@@ -14,7 +14,7 @@ namespace Train2d.Main.Commands
 
     protected override bool Execute()
     {
-      return _viewModel.LayoutController.AddLayoutItem(_item, _newGuid);
+      return _viewModel.LayoutController.AddLayoutItem(_viewModel, _item, _newGuid);
     }
 
     protected override void Undo()

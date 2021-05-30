@@ -18,7 +18,7 @@ namespace Train2d.Main.Commands
 
     protected override void Undo()
     {
-      _viewModel.LayoutController.AddLayoutItem(_item, _oldGuid);
+      _viewModel.LayoutController.AddLayoutItem(_viewModel, _item, _oldGuid);
     }
 
     public override string ToString()

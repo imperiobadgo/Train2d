@@ -239,7 +239,7 @@ namespace Train2d.Main
     /// Adds a LayoutItem to the guid-dictionary
     /// </summary>
     /// <returns>True when added, False if already exists</returns>
-    public bool AddLayoutItem(ItemViewModel newItem, Guid? newGuid = null)
+    public bool AddLayoutItem(LayoutViewModel layout, ItemViewModel newItem, Guid? newGuid = null)
     {
       if (newItem.Id.HasValue)
       {
@@ -250,7 +250,7 @@ namespace Train2d.Main
         newGuid = Guid.NewGuid();
       }
       _content.Add(newGuid.Value, newItem);
-      newItem.SetGuid(newGuid);
+      newItem.SetGuid(layout, newGuid);
       InsertItemTypeSorted(newItem);
       return true;
     }
@@ -272,7 +272,7 @@ namespace Train2d.Main
     /// <summary>
     /// Tries to remove the LayoutItem from the guid-dictionary
     /// </summary>
-    /// <returns>True if iem could be removed, False if item is not in the dictionary</returns>
+    /// <returns>True, if item could be removed, False, if item is not in the dictionary</returns>
     public bool RemoveLayoutItem(ItemViewModel itemToRemove)
     {
       if (!itemToRemove.Id.HasValue)
@@ -282,7 +282,7 @@ namespace Train2d.Main
       if (_content.Remove(itemToRemove.Id.Value))
       {
         Items.Remove(itemToRemove);
-        itemToRemove.SetGuid(null);
+        itemToRemove.SetGuid(null, null);
         return true;
       }
       return false;

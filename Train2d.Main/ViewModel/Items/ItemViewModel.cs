@@ -12,6 +12,7 @@ namespace Train2d.Main.ViewModel.Items
   {
     #region Attributes
 
+    protected LayoutViewModel _layout;
     private Item _item;
     private Brush _mainColor;
 
@@ -36,8 +37,9 @@ namespace Train2d.Main.ViewModel.Items
 
     #region Methods
 
-    public void SetGuid(Guid? newId)
+    public void SetGuid(LayoutViewModel layout, Guid? newId)
     {
+      _layout = layout;
       _item.Id = newId;
     }
 

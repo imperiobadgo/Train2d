@@ -12,6 +12,7 @@ namespace Train2d.Main.ViewModel.Items
 {
   public class SignalViewModel : ItemGenericViewModel<Signal>
   {
+
     #region Construct
 
     public SignalViewModel() : this(new Signal())
@@ -45,17 +46,42 @@ namespace Train2d.Main.ViewModel.Items
 
     public override void OnSelectMain(LayoutController controller, LayoutViewModel layout)
     {
+      ChangeState();
+    }
+
+    public bool ChangeState()
+    {
+      if (_layout == null)
+      {
+        return false;
+      }
       int currentState = Item().State;
       currentState += 1;
       if (currentState == 2)
       {
         currentState = 0;
       }
-      layout.GetCommandController().AddCommand(new SetSignalStateCommand(layout, this, currentState));
+      _layout.GetCommandController().AddCommand(new SetSignalStateCommand(_layout, this, currentState));
+      return true;
     }
 
     #endregion
 
+    #region Userproperties
+
+    public int StateChanger
+    {
+      get => Item().State;
+      set
+      {
+        if (ChangeState())
+        {
+          _layout.GetCommandController().ExecuteNewCommands();
+        }        
+      }
+    }
+
+    #endregion
 
     #region Properties
 
@@ -89,10 +115,7 @@ namespace Train2d.Main.ViewModel.Items
 
     public double Angle
     {
-      get
-      {
-        return -Direction * 45;
-      }
+      get => -Direction * 45;
       private set { }
     }
 
