@@ -66,7 +66,7 @@ namespace Train2d.Main.ViewModel
             writer.Flush();
           }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
 
         }
@@ -98,7 +98,7 @@ namespace Train2d.Main.ViewModel
             SelectedView.LayoutController.SetLayout(SelectedView, loadedLayout);
           }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
 
         }

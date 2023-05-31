@@ -14,10 +14,9 @@ namespace Train2d.Main.ViewModel
 
     private DateTime _time1;
     private DateTime _time2;
-    private DispatcherTimer _timer;
+    private readonly DispatcherTimer _timer;
 
-    private Random rand;
-    private MainWindowViewModel _parent;
+    private readonly MainWindowViewModel _parent;
 
     #endregion
 
@@ -55,7 +54,7 @@ namespace Train2d.Main.ViewModel
 
     float elapsedSeconds = 0.0f;
     int numFrames = 0;
-    float secondsToTrigger = 1.0f;
+    readonly float secondsToTrigger = 1.0f;
 
     private void GameLoop(object sender, EventArgs e)
     {
