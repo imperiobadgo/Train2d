@@ -85,11 +85,11 @@ namespace Train2d.Main.ViewModel.Items
         return false;
       }
       List<Guid> adjacentTracks = Item().AdjacentTrackIds.ToList();
-      Guid firstTrackId = adjacentTracks.FirstOrDefault();
-      if (firstTrackId == null)
+      if (!adjacentTracks.Any())
       {
         return false;
       }
+      Guid firstTrackId = adjacentTracks.FirstOrDefault();
       //rotate through all possible tracks
       adjacentTracks.Remove(firstTrackId);
       adjacentTracks.Add(firstTrackId);

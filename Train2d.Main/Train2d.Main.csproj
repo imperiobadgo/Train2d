@@ -1,17 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net472</TargetFramework>
-    <UseWPF>true</UseWPF>    
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="ExtendedXmlSerializer" Version="3.7.11" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Train2d.Model\Train2d.Model.csproj" />
   </ItemGroup>
-
 </Project>

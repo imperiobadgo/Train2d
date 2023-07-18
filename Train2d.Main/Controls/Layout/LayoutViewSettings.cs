@@ -4,11 +4,11 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
 using Train2d.Model;
-using Train2d.Model.Converter;
+using Train2d.Main.Extensions;
 
 namespace Train2d.Main.Controls
 {
-  public class LayoutViewSettings : INotifyPropertyChanged
+    public class LayoutViewSettings : INotifyPropertyChanged
   {
     #region Attributes
 

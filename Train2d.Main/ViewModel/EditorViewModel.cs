@@ -5,14 +5,14 @@ using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
 using Train2d.Main.Commands;
+using Train2d.Main.Extensions;
 using Train2d.Main.ViewModel.Items;
 using Train2d.Model;
-using Train2d.Model.Converter;
 using Train2d.Model.Items;
 
 namespace Train2d.Main.ViewModel
 {
-  public class EditorViewModel : ViewModelBase
+    public class EditorViewModel : ViewModelBase
   {
     #region Attributes
 

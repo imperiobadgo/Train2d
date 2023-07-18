@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
+using Train2d.Main.Extensions;
 using Train2d.Model;
-using Train2d.Model.Converter;
 using Train2d.Model.Items;
 
 namespace Train2d.Main.ViewModel.Items
 {
-  public abstract class ItemViewModel : ViewModelBase
+    public abstract class ItemViewModel : ViewModelBase
   {
     #region Attributes
 

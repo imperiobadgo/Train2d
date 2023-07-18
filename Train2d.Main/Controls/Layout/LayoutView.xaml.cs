@@ -3,15 +3,15 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Train2d.Main.Extensions;
 using Train2d.Model;
-using Train2d.Model.Converter;
 
 namespace Train2d.Main.Controls
 {
-  /// <summary>
-  /// Interaction logic for LayoutView.xaml
-  /// </summary>
-  public partial class LayoutView : UserControl
+    /// <summary>
+    /// Interaction logic for LayoutView.xaml
+    /// </summary>
+    public partial class LayoutView : UserControl
   {
     #region Attributes
 
